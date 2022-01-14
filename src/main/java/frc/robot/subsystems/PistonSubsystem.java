@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class PistonSubsystem extends SubsystemBase {
-  public Solenoid pistonSolenoid1;
-  public Solenoid pistonSolenoid2;
-  public Solenoid downStopper1;
-  public Solenoid downStopper2;
-  public Solenoid upStopper1;
-  public Solenoid upStopper2;
+  private Solenoid pistonSolenoid1;
+  private Solenoid pistonSolenoid2;
+  private Solenoid downStopper1;
+  private Solenoid downStopper2;
+  private Solenoid upStopper1;
+  private Solenoid upStopper2;
 
   public String direction;
   public boolean stopped = false;

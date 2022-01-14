@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.PistonCommand;
-import frc.robot.commands.PistonStopCommand;
 import frc.robot.subsystems.CompressorSubsystem;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.PistonSubsystem;
 import lib.components.LogitechJoystick;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,18 +22,22 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final CompressorSubsystem m_compressorSubsystem = new CompressorSubsystem();
-  private final AutonomousCommand m_autoCommand = new AutonomousCommand(m_compressorSubsystem);
 
   private final LogitechJoystick joystick1 = new LogitechJoystick(Constants.joystickport1);
   private final LogitechJoystick joystick2 = new LogitechJoystick(Constants.joystickport2);
   private final LogitechJoystick joystick3 = new LogitechJoystick(Constants.joystickport3);
   private final LogitechJoystick joystick4 = new LogitechJoystick(Constants.joystickport4);
 
+  private final CompressorSubsystem m_compressorSubsystem = new CompressorSubsystem();
   public final PistonSubsystem piston1 = new PistonSubsystem(0, 1, 2, 3, 4, 5);
+  public final DriveTrain drivetrain = new DriveTrain();
+
+  private final AutonomousCommand m_autoCommand = new AutonomousCommand(drivetrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // drivetrain.setDefaultCommand(new TankDrive(m_driveSubsystem, jLeft::getYAxis, jRight::getYAxis));
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -45,10 +49,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    joystick4.btn_3.whenPressed(new PistonStopCommand(piston1));
-    joystick4.btn_4.whenPressed(new PistonStopCommand(piston1));
+    joystick4.btn_3.whenPressed(new PistonCommand(piston1, Constants.STOP));
+    joystick4.btn_4.whenPressed(new PistonCommand(piston1, Constants.STOP));
     joystick4.btn_5.whenPressed(new PistonCommand(piston1, Constants.UP));
     joystick4.btn_6.whenPressed(new PistonCommand(piston1, Constants.DOWN));
+
+    
   }
 
   /**

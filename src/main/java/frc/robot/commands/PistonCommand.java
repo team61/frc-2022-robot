@@ -33,11 +33,13 @@ public class PistonCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.release();
-
-    if (direction == Constants.UP) {
+    if (direction == Constants.STOP) {
+      m_subsystem.stop();
+    } else if (direction == Constants.UP) {
+      m_subsystem.release();
       m_subsystem.extend();
     } else {
+      m_subsystem.release();
       m_subsystem.retract();
     }
   }
