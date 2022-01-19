@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CompressorSubsystem extends SubsystemBase {
   public Compressor c;
-  /** Creates a new ExampleSubsystem. */
+  /** Creates a new CompressorSubsystem. */
   public CompressorSubsystem() {
-    c = new Compressor(0, PneumaticsModuleType.CTREPCM);
+    c = new Compressor(1, PneumaticsModuleType.REVPH);
   }
 
   @Override

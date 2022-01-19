@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class LogitechJoystick extends Joystick {
 
-    private final double JOYSTICK_BUFFER = .07;
+    private final double JOYSTICK_BUFFER = 0.1;
 
     public LogitechJoystick(int port) {
         super(port);

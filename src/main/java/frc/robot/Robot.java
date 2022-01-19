@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import lib.components.LogitechJoystick;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -62,6 +67,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    m_robotContainer.piston1.pistonSolenoid.set(Value.kForward);
   }
 
   /** This function is called periodically during autonomous. */
@@ -84,7 +91,16 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    TalonFX motor1 = m_robotContainer.drivetrain.motor1;
+    TalonFX motor2 = m_robotContainer.drivetrain.motor2;
+    LogitechJoystick joystick1 = m_robotContainer.joystick1;
+
+    // Get the value and square but keep sign
+    double speedPercentage = joystick1.getYAxis();
+    motor1.set(ControlMode.PercentOutput, speedPercentage * Math.abs(speedPercentage));
+    motor2.set(ControlMode.PercentOutput, speedPercentage * Math.abs(speedPercentage));
+  }
 
   @Override
   public void testInit() {

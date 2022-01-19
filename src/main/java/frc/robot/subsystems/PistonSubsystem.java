@@ -4,8 +4,11 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -16,19 +19,28 @@ public class PistonSubsystem extends SubsystemBase {
   private Solenoid downStopper2;
   private Solenoid upStopper1;
   private Solenoid upStopper2;
+  public DoubleSolenoid pistonSolenoid;
+  private DoubleSolenoid upStopper;
+  private DoubleSolenoid downStopper;
 
   public String direction;
   public boolean stopped = false;
   /** Creates a new PistonSubsystem. */
-  public PistonSubsystem(int port1, int port2, int port3, int port4, int port5, int port6) {
-    pistonSolenoid1 = new Solenoid(PneumaticsModuleType.CTREPCM, port1);
-    pistonSolenoid2 = new Solenoid(PneumaticsModuleType.CTREPCM, port2);
+  public PistonSubsystem(PneumaticHub hub, int port1, int port2, int port3, int port4, int port5, int port6) {
+    pistonSolenoid = hub.makeDoubleSolenoid(port1, port2);
+    upStopper = hub.makeDoubleSolenoid(port3, port4);
+    downStopper = hub.makeDoubleSolenoid(port5, port6);
+    
+    /*
+    pistonSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, port1);
+    pistonSolenoid2 = new Solenoid(PneumaticsModuleType.REVPH, port2);
 
-    upStopper1 = new Solenoid(PneumaticsModuleType.CTREPCM, port3);
-    upStopper2 = new Solenoid(PneumaticsModuleType.CTREPCM, port4);
+    upStopper1 = new Solenoid(PneumaticsModuleType.REVPH, port3);
+    upStopper2 = new Solenoid(PneumaticsModuleType.REVPH, port4);
 
-    downStopper1 = new Solenoid(PneumaticsModuleType.CTREPCM, port5);
-    downStopper2 = new Solenoid(PneumaticsModuleType.CTREPCM, port6);
+    downStopper1 = new Solenoid(PneumaticsModuleType.REVPH, port5);
+    downStopper2 = new Solenoid(PneumaticsModuleType.REVPH, port6);
+    */
 
     releaseUp();
     releaseDown();
@@ -55,8 +67,9 @@ public class PistonSubsystem extends SubsystemBase {
   public void extend() {
     if (stopped) return;
 
-    pistonSolenoid1.set(true);
-    pistonSolenoid2.set(false);
+    //pistonSolenoid1.set(true);
+    //pistonSolenoid2.set(false);
+    pistonSolenoid.set(Value.kForward);
 
     direction = Constants.UP;
   }
@@ -64,36 +77,41 @@ public class PistonSubsystem extends SubsystemBase {
   public void retract() {
     if (stopped) return;
 
-    pistonSolenoid1.set(false);
-    pistonSolenoid2.set(true);
+    //pistonSolenoid1.set(false);
+    //pistonSolenoid2.set(true);
+    pistonSolenoid.set(Value.kReverse);
     
     direction = Constants.DOWN;
   }
 
   private void stopDown() {
-    downStopper1.set(false);
-    downStopper2.set(true);
+    //downStopper1.set(false);
+    //downStopper2.set(true);
+    downStopper.set(Value.kForward);
 
     stopped = true;
   }
 
   private void releaseDown() {
-    downStopper1.set(true);
-    downStopper2.set(false);
+    //downStopper1.set(true);
+    //downStopper2.set(false);
+    downStopper.set(Value.kReverse);
 
     stopped = false;
   }
 
   private void stopUp() {
-    upStopper1.set(false);
-    upStopper2.set(true);
+    //upStopper1.set(false);
+    //upStopper2.set(true);
+    upStopper.set(Value.kForward);
 
     stopped = true;
   }
 
   private void releaseUp() {
-    upStopper1.set(true);
-    upStopper2.set(false);
+    //upStopper1.set(true);
+    //upStopper2.set(false);
+    upStopper.set(Value.kReverse);
 
     stopped = false;
   }

@@ -4,9 +4,16 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.robot.commands.AutonomousCommand;
+import frc.robot.commands.DriveCommand;
 import frc.robot.commands.PistonCommand;
 import frc.robot.subsystems.CompressorSubsystem;
 import frc.robot.subsystems.DriveTrain;
@@ -23,21 +30,22 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final LogitechJoystick joystick1 = new LogitechJoystick(Constants.joystickport1);
+  public final LogitechJoystick joystick1 = new LogitechJoystick(Constants.joystickport1);
   private final LogitechJoystick joystick2 = new LogitechJoystick(Constants.joystickport2);
   private final LogitechJoystick joystick3 = new LogitechJoystick(Constants.joystickport3);
   private final LogitechJoystick joystick4 = new LogitechJoystick(Constants.joystickport4);
 
+  public final PowerDistribution pdp = new PowerDistribution(4, ModuleType.kRev);
+  public final PneumaticHub m_pneumaticHub = new PneumaticHub(5);
   private final CompressorSubsystem m_compressorSubsystem = new CompressorSubsystem();
-  public final PistonSubsystem piston1 = new PistonSubsystem(0, 1, 2, 3, 4, 5);
+  
+  public final PistonSubsystem piston1 = new PistonSubsystem(m_pneumaticHub, 0, 1, 2, 3, 4, 5);
   public final DriveTrain drivetrain = new DriveTrain();
 
   private final AutonomousCommand m_autoCommand = new AutonomousCommand(drivetrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // drivetrain.setDefaultCommand(new TankDrive(m_driveSubsystem, jLeft::getYAxis, jRight::getYAxis));
-
     // Configure the button bindings
     configureButtonBindings();
   }

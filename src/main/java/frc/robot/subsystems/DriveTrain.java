@@ -14,8 +14,8 @@ public class DriveTrain extends SubsystemBase {
 
   /** Creates a new DriveTrain. */
   public DriveTrain() {
-    motor1 = new TalonFX(0);
-    motor2 = new TalonFX(1);
+    motor1 = new TalonFX(1);
+    motor2 = new TalonFX(2);
   }
 
   @Override
