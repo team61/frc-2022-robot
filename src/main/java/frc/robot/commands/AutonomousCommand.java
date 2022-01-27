@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /** An example command that uses an example subsystem. */
 public class AutonomousCommand extends CommandBase {
@@ -35,11 +36,11 @@ public class AutonomousCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // m_subsystem.motor1.set(ControlMode.PercentOutput, 0.5);
-    // m_subsystem.motor2.set(ControlMode.PercentOutput, 0.5);
-    // Timer.delay(2);
-    // m_subsystem.motor1.set(ControlMode.PercentOutput, 0.0);
-    // m_subsystem.motor2.set(ControlMode.PercentOutput, 0.0);
+    m_subsystem.drive(0.1, 0.1);
+    Timer.delay(2);
+    m_subsystem.drive(-0.1, -0.1);
+    Timer.delay(2);
+    m_subsystem.drive(0, 0);
   }
 
   // Called once the command ends or is interrupted.

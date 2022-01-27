@@ -68,8 +68,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-    m_robotContainer.piston1.pistonSolenoid.set(Value.kForward);
   }
 
   /** This function is called periodically during autonomous. */
@@ -100,8 +98,7 @@ public class Robot extends TimedRobot {
     double speedPercentage1 = joystick1.getYAxis() * Math.abs(joystick1.getYAxis());
     double speedPercentage2 = joystick2.getYAxis() * Math.abs(joystick2.getYAxis());
 
-    m_robotContainer.driveTrain.drive(speedPercentage1, speedPercentage2);
-    //new DriveCommand(m_robotContainer.driveTrain, speedPercentage1, speedPercentage2).schedule();
+    new DriveCommand(m_robotContainer.driveTrain, speedPercentage1, speedPercentage2).schedule();
   }
 
   @Override
