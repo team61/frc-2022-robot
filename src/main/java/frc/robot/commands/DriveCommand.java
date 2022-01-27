@@ -4,12 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.PistonSubsystem;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.fasterxml.jackson.databind.jsontype.impl.SubTypeValidator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -17,16 +12,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DriveCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveTrain m_subsystem;
-  private double speed;
+  private double lSpeed;
+  private double rSpeed;
 
   /**
-   * Creates a new PistonCommand.
+   * Creates a new DriveCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveCommand(DriveTrain subsystem, double s) {
+  public DriveCommand(DriveTrain subsystem, double s1, double s2) {
     m_subsystem = subsystem;
-    speed = s;
+    lSpeed = s1;
+    rSpeed = s2;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -38,8 +35,7 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.motor1.set(ControlMode.PercentOutput, speed);
-    //m_subsystem.motor2.set(ControlMode.PercentOutput, speed);
+    m_subsystem.drive(lSpeed, rSpeed);
   }
 
   // Called once the command ends or is interrupted.

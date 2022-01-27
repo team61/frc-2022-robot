@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.DriveCommand;
 import lib.components.LogitechJoystick;
 
 /**
@@ -92,14 +93,15 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    TalonFX motor1 = m_robotContainer.drivetrain.motor1;
-    TalonFX motor2 = m_robotContainer.drivetrain.motor2;
     LogitechJoystick joystick1 = m_robotContainer.joystick1;
+    LogitechJoystick joystick2 = m_robotContainer.joystick2;
 
     // Get the value and square but keep sign
-    double speedPercentage = joystick1.getYAxis();
-    motor1.set(ControlMode.PercentOutput, speedPercentage * Math.abs(speedPercentage));
-    motor2.set(ControlMode.PercentOutput, speedPercentage * Math.abs(speedPercentage));
+    double speedPercentage1 = joystick1.getYAxis() * Math.abs(joystick1.getYAxis());
+    double speedPercentage2 = joystick2.getYAxis() * Math.abs(joystick2.getYAxis());
+
+    m_robotContainer.driveTrain.drive(speedPercentage1, speedPercentage2);
+    //new DriveCommand(m_robotContainer.driveTrain, speedPercentage1, speedPercentage2).schedule();
   }
 
   @Override
@@ -110,5 +112,8 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    m_robotContainer.driveTrain.driveLeft(0.1);
+    m_robotContainer.driveTrain.driveRight(0.1);
+  }
 }

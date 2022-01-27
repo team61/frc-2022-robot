@@ -30,17 +30,6 @@ public class PistonSubsystem extends SubsystemBase {
     pistonSolenoid = hub.makeDoubleSolenoid(port1, port2);
     upStopper = hub.makeDoubleSolenoid(port3, port4);
     downStopper = hub.makeDoubleSolenoid(port5, port6);
-    
-    /*
-    pistonSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, port1);
-    pistonSolenoid2 = new Solenoid(PneumaticsModuleType.REVPH, port2);
-
-    upStopper1 = new Solenoid(PneumaticsModuleType.REVPH, port3);
-    upStopper2 = new Solenoid(PneumaticsModuleType.REVPH, port4);
-
-    downStopper1 = new Solenoid(PneumaticsModuleType.REVPH, port5);
-    downStopper2 = new Solenoid(PneumaticsModuleType.REVPH, port6);
-    */
 
     releaseUp();
     releaseDown();

@@ -4,18 +4,29 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrain extends SubsystemBase {
-  public TalonFX motor1;
-  public TalonFX motor2;
+  public DoubleMotors driveLeft;
+  public DoubleMotors driveRight;
 
   /** Creates a new DriveTrain. */
-  public DriveTrain() {
-    motor1 = new TalonFX(1);
-    motor2 = new TalonFX(2);
+  public DriveTrain(DoubleMotors l, DoubleMotors r) {
+    driveLeft = l;
+    driveRight = r;
+  }
+
+  public void drive(double l, double r) {
+    driveLeft(l);
+    driveRight(r);
+  }
+
+  public void driveLeft(double s) {
+    driveLeft.setSpeed(s);
+  }
+
+  public void driveRight(double s) {
+    driveRight.setSpeed(s);
   }
 
   @Override

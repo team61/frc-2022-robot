@@ -16,6 +16,7 @@ import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.PistonCommand;
 import frc.robot.subsystems.CompressorSubsystem;
+import frc.robot.subsystems.DoubleMotors;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.PistonSubsystem;
 import lib.components.LogitechJoystick;
@@ -31,18 +32,20 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   public final LogitechJoystick joystick1 = new LogitechJoystick(Constants.joystickport1);
-  private final LogitechJoystick joystick2 = new LogitechJoystick(Constants.joystickport2);
+  public final LogitechJoystick joystick2 = new LogitechJoystick(Constants.joystickport2);
   private final LogitechJoystick joystick3 = new LogitechJoystick(Constants.joystickport3);
   private final LogitechJoystick joystick4 = new LogitechJoystick(Constants.joystickport4);
 
   public final PowerDistribution pdp = new PowerDistribution(4, ModuleType.kRev);
   public final PneumaticHub m_pneumaticHub = new PneumaticHub(5);
-  private final CompressorSubsystem m_compressorSubsystem = new CompressorSubsystem();
+  // private final CompressorSubsystem m_compressorSubsystem = new CompressorSubsystem();
   
   public final PistonSubsystem piston1 = new PistonSubsystem(m_pneumaticHub, 0, 1, 2, 3, 4, 5);
-  public final DriveTrain drivetrain = new DriveTrain();
+  public final DoubleMotors driveLeft = new DoubleMotors(0, 1);
+  public final DoubleMotors driveRight = new DoubleMotors(2, 3);
+  public final DriveTrain driveTrain = new DriveTrain(driveLeft, driveRight);
 
-  private final AutonomousCommand m_autoCommand = new AutonomousCommand(drivetrain);
+  private final AutonomousCommand m_autoCommand = new AutonomousCommand(driveTrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -61,8 +64,6 @@ public class RobotContainer {
     joystick4.btn_4.whenPressed(new PistonCommand(piston1, Constants.STOP));
     joystick4.btn_5.whenPressed(new PistonCommand(piston1, Constants.UP));
     joystick4.btn_6.whenPressed(new PistonCommand(piston1, Constants.DOWN));
-
-    
   }
 
   /**
