@@ -4,18 +4,13 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.robot.commands.AutonomousCommand;
-import frc.robot.commands.DriveCommand;
 import frc.robot.commands.PistonCommand;
-import frc.robot.subsystems.CompressorSubsystem;
 import frc.robot.subsystems.DoubleMotors;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.PistonSubsystem;

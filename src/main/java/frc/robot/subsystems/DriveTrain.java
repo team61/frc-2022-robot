@@ -19,7 +19,7 @@ public class DriveTrain extends SubsystemBase {
 
   public void driveTime(double l, double r, double s) {
     drive(l, r);
-    Timer.delay(s);
+    Timer.delay(2);
   }
 
   public void stop() {

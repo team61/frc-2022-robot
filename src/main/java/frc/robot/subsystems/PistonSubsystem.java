@@ -6,19 +6,11 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class PistonSubsystem extends SubsystemBase {
-  private Solenoid pistonSolenoid1;
-  private Solenoid pistonSolenoid2;
-  private Solenoid downStopper1;
-  private Solenoid downStopper2;
-  private Solenoid upStopper1;
-  private Solenoid upStopper2;
   public DoubleSolenoid pistonSolenoid;
   private DoubleSolenoid upStopper;
   private DoubleSolenoid downStopper;

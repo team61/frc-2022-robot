@@ -7,10 +7,9 @@ package frc.robot;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.Autonomous;
+import frc.robot.commands.Playback;
 import frc.robot.commands.DriveCommand;
 import lib.components.LogitechJoystick;
 
@@ -27,7 +26,6 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private ArrayList<double[]> speeds = new ArrayList<>();
-  private int speedIndex = 0;
   private boolean recording = false;
 
   /**
@@ -61,6 +59,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     if (!recording) return;
+    recording = false;
 
     String output = "speeds = new double[][]{";
     for (double[] speed : speeds) {
@@ -68,7 +67,10 @@ public class Robot extends TimedRobot {
     }
     output += "};";
 
-    recording = false;
+    Playback.speeds = new double[speeds.size()][];
+    for (int i = 0; i < speeds.size(); i++) {
+      Playback.speeds[i] = speeds.get(i);
+    }
 
     System.out.println("\n");
     System.out.print(output);
@@ -81,24 +83,17 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    /*
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    */
-
-    speedIndex = 0;
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-    Autonomous.run(m_robotContainer.driveTrain, speedIndex);
-    speedIndex++;
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
