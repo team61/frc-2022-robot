@@ -11,12 +11,14 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /** An example command that uses an example subsystem. */
 public class AutonomousCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveTrain m_subsystem;
+  private boolean finished = false;
 
   /**
    * Creates a new ExampleCommand.
@@ -36,20 +38,23 @@ public class AutonomousCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.drive(0.1, 0.1);
-    Timer.delay(2);
-    m_subsystem.drive(-0.1, -0.1);
-    Timer.delay(2);
-    m_subsystem.drive(0, 0);
+    m_subsystem.driveTime(0.2, 0.2, 2);
+    m_subsystem.driveTime(0.2, -0.2, 2);
+    m_subsystem.driveTime(-0.2, -0.2, 2);
+    m_subsystem.stop();
+
+    end(false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    finished = true;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finished;
   }
 }

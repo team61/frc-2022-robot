@@ -4,13 +4,13 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.Autonomous;
 import frc.robot.commands.DriveCommand;
 import lib.components.LogitechJoystick;
 
@@ -20,10 +20,15 @@ import lib.components.LogitechJoystick;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
+
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private ArrayList<double[]> speeds = new ArrayList<>();
+  private int speedIndex = 0;
+  private boolean recording = false;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -54,7 +59,21 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    if (!recording) return;
+
+    String output = "speeds = new double[][]{";
+    for (double[] speed : speeds) {
+      output += "new double[]{" + speed[0] + "," + speed[1] + "},";
+    }
+    output += "};";
+
+    recording = false;
+
+    System.out.println("\n");
+    System.out.print(output);
+    System.out.println("\n");
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -62,17 +81,24 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    /*
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    */
+
+    speedIndex = 0;
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    Autonomous.run(m_robotContainer.driveTrain, speedIndex);
+    speedIndex++;
+  }
 
   @Override
   public void teleopInit() {
@@ -105,12 +131,22 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    speeds.clear();
+    recording = true;
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_robotContainer.driveTrain.driveLeft(0.1);
-    m_robotContainer.driveTrain.driveRight(0.1);
+    LogitechJoystick joystick1 = m_robotContainer.joystick1;
+    LogitechJoystick joystick2 = m_robotContainer.joystick2;
+
+    // Get the value and square but keep sign
+    double speedPercentage1 = joystick1.getYAxis() * Math.abs(joystick1.getYAxis());
+    double speedPercentage2 = joystick2.getYAxis() * Math.abs(joystick2.getYAxis());
+
+    m_robotContainer.driveTrain.drive(speedPercentage1, speedPercentage2);
+
+    speeds.add(new double[] {speedPercentage1, speedPercentage2});
   }
 }
