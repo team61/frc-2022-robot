@@ -13,7 +13,9 @@ import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.PistonCommand;
 import frc.robot.subsystems.DoubleMotors;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PistonSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import lib.components.LogitechJoystick;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -40,6 +42,9 @@ public class RobotContainer {
   public final DoubleMotors driveRight = new DoubleMotors(2, 3);
   public final DriveTrain driveTrain = new DriveTrain(driveLeft, driveRight);
 
+  public final IntakeSubsystem intake = new IntakeSubsystem(6, 7);
+  public final ShooterSubsystem shooter = new ShooterSubsystem(intake, 4, 5);
+
   private final AutonomousCommand m_autoCommand = new AutonomousCommand(driveTrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -55,6 +60,19 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    joystick3.btn_1.whenPressed(() -> {
+      intake.intake();
+    });
+    joystick3.btn_1.whenReleased(() -> {
+      intake.stop();
+    });
+
+    joystick4.btn_1.whenPressed(() -> {
+      shooter.shoot();
+    });
+    joystick4.btn_1.whenReleased(() -> {
+      shooter.stop();
+    });
     joystick4.btn_3.whenPressed(new PistonCommand(piston1, Constants.STOP));
     joystick4.btn_4.whenPressed(new PistonCommand(piston1, Constants.STOP));
     joystick4.btn_5.whenPressed(new PistonCommand(piston1, Constants.UP));

@@ -19,9 +19,17 @@ public class DoubleMotors extends SubsystemBase {
     motor2 = new TalonFX(id2);
   }
 
-  public void setSpeed(double s) {
+  public void setSpeed1(double s) {
     motor1.set(ControlMode.PercentOutput, s);
+  }
+
+  public void setSpeed2(double s) {
     motor2.set(ControlMode.PercentOutput, s);
+  }
+
+  public void setSpeed(double s) {
+    setSpeed1(s);
+    setSpeed2(s);
   }
 
   @Override
