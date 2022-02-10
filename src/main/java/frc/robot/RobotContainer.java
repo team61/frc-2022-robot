@@ -49,7 +49,7 @@ public class RobotContainer {
 
   public final SensorSubsystem sensor1 = new SensorSubsystem(0);
   public final SensorSubsystem sensor2 = new SensorSubsystem(1);
-  public final IntakeSubsystem intake = new IntakeSubsystem(sensor1, 3, 2);
+  public final IntakeSubsystem intake = new IntakeSubsystem(sensor1, sensor2, 3, 2);
   public final ShooterSubsystem shooter = new ShooterSubsystem(intake, 4, 17);
 
   public final LEDStripSubsystem ledStrip = new LEDStripSubsystem(LEDStripPort, LEDStripLength);
@@ -81,13 +81,13 @@ public class RobotContainer {
                    .whenReleased(() -> { shooter.setSpeed(0.0); });
     joystick3.btn_8.whileHeld(() -> { shooter.setSpeed(-SHOOTER_SPEED); })
                    .whenReleased(() -> { shooter.setSpeed(0.0); });
-    joystick3.btn_9.whileHeld(() -> { intake.setSpeed1(INTAKE_SPEED); })
+    joystick3.btn_9.whileHeld(() -> { intake.setSpeed1(INTAKE_1_SPEED); })
                    .whenReleased(() -> { intake.setSpeed1(0.0); });
-    joystick3.btn_10.whileHeld(() -> { intake.setSpeed1(-INTAKE_SPEED); })
+    joystick3.btn_10.whileHeld(() -> { intake.setSpeed1(-INTAKE_1_SPEED); })
                     .whenReleased(() -> { intake.setSpeed1(0.0); });
-    joystick3.btn_11.whileHeld(() -> { intake.setSpeed2(INTAKE_SPEED); })
+    joystick3.btn_11.whileHeld(() -> { intake.setSpeed2(INTAKE_2_SPEED); })
                     .whenReleased(() -> { intake.setSpeed2(0.0); });
-    joystick3.btn_12.whileHeld(() -> { intake.setSpeed2(-INTAKE_SPEED); })
+    joystick3.btn_12.whileHeld(() -> { intake.setSpeed2(-INTAKE_2_SPEED); })
                     .whenReleased(() -> { intake.setSpeed2(0.0); });
 
     joystick4.btn_3.whenPressed(new PistonCommand(piston1, STOP));

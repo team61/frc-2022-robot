@@ -28,6 +28,15 @@ public class Robot extends TimedRobot {
   private ArrayList<double[]> speeds = new ArrayList<>();
   private boolean recording = false;
   private long teleopStartTime = 0;
+  private boolean inAutonomous = false;
+  int[][] colors = {
+    new int[] {255, 0, 0},
+    new int[] {255, 64, 0},
+    new int[] {255, 255, 0},
+    new int[] {0, 255, 0},
+    new int[] {0, 0, 255},
+    new int[] {255, 0, 255}
+  };
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -38,6 +47,14 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    addPeriodic(() -> {
+      if (!inAutonomous) return;
+      
+      for (int i = 0; i < 6; i++) {
+        m_robotContainer.ledStrip.setRGB(i, colors[i][0], colors[i][1], colors[i][2]);
+      }
+    }, 0.1);
   }
 
   /**
@@ -61,6 +78,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     m_robotContainer.ledStrip.turnOff();
 
+    if (inAutonomous) inAutonomous = false;
     if (!recording) return;
     recording = false;
 
@@ -100,6 +118,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    inAutonomous = true;
   }
 
   /** This function is called periodically during autonomous. */

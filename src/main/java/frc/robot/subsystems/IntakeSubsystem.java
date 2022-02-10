@@ -10,14 +10,16 @@ import static frc.robot.Constants.*;
 public class IntakeSubsystem extends SubsystemBase {
   private DoubleMotors intake;
   private SensorSubsystem sensor1;
+  private SensorSubsystem sensor2;
 
   private boolean stopped1 = false;
   private boolean stopped2 = false;
 
   /** Creates a new IntakeSubsystem. */
-  public IntakeSubsystem(SensorSubsystem s1, int id1, int id2) {
+  public IntakeSubsystem(SensorSubsystem s1, SensorSubsystem s2, int id1, int id2) {
     intake = new DoubleMotors(id1, id2, false);
     sensor1 = s1;
+    sensor2 = s2;
   }
 
   public void stop() {
@@ -46,35 +48,42 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void intake() {
     if (!stopped1) {
-      setSpeed1(INTAKE_SPEED);
+      setSpeed1(INTAKE_1_SPEED);
     }
 
     if (!stopped2) {
-      setSpeed2(INTAKE_SPEED);
+      setSpeed2(INTAKE_2_SPEED);
     }
   }
 
   public void intake(boolean force) {
     if (force) {
-      setSpeed1(INTAKE_SPEED);
-      setSpeed2(INTAKE_SPEED);
+      setSpeed1(INTAKE_1_SPEED);
+      setSpeed2(INTAKE_2_SPEED);
     } else {
       intake();
     }
   }
 
   public void eject() {
-    setSpeed1(-INTAKE_SPEED);
-    setSpeed2(-INTAKE_SPEED);
+    setSpeed1(-INTAKE_1_SPEED);
+    setSpeed2(-INTAKE_2_SPEED);
   }
 
   @Override
   public void periodic() {
-    if (sensor1.isTriggered()/* && getSpeed1() > 0.08*/) {
+    if (sensor1.isTriggered()) {
       setSpeed1(-0.05);
       stopped1 = true;
-    } else if (!sensor1.isTriggered()) {
+    } else {
       stopped1 = false;
+    }
+
+    if (sensor2.isTriggered() && stopped1) {
+      setSpeed2(-0.05);
+      stopped2 = true;
+    } else {
+      stopped2 = false;
     }
   }
 
