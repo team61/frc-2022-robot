@@ -4,22 +4,23 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.PistonSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.robot.Constants.*;
 
 /** An example command that uses an example subsystem. */
-public class PistonCommand extends CommandBase {
+public class ShootCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final PistonSubsystem m_subsystem;
-  private final String direction;
+  private final ShooterSubsystem m_subsystem;
+  private String direction;
 
   /**
-   * Creates a new PistonCommand.
+   * Creates a new DriveCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public PistonCommand(PistonSubsystem subsystem, String dir) {
+  public ShootCommand(ShooterSubsystem subsystem, String dir) {
     m_subsystem = subsystem;
     direction = dir;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -33,14 +34,10 @@ public class PistonCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (direction == STOP) {
+    if (direction == OUT) {
+      m_subsystem.shoot();
+    } else if (direction == STOP) {
       m_subsystem.stop();
-    } else if (direction == UP) {
-      m_subsystem.release();
-      m_subsystem.extend();
-    } else {
-      m_subsystem.release();
-      m_subsystem.retract();
     }
   }
 

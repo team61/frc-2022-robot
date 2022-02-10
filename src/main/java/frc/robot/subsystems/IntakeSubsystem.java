@@ -5,35 +5,77 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static frc.robot.Constants.*;
 
 public class IntakeSubsystem extends SubsystemBase {
-  public DoubleMotors intake;
+  private DoubleMotors intake;
+  private SensorSubsystem sensor1;
+
+  private boolean stopped1 = false;
+  private boolean stopped2 = false;
 
   /** Creates a new IntakeSubsystem. */
-  public IntakeSubsystem(int id1, int id2) {
-    intake = new DoubleMotors(id1, id2);
+  public IntakeSubsystem(SensorSubsystem s1, int id1, int id2) {
+    intake = new DoubleMotors(id1, id2, false);
+    sensor1 = s1;
   }
 
   public void stop() {
     intake.setSpeed(0.0);
   }
 
+  public double getSpeed1() {
+    return intake.getSpeed1();
+  }
+
+  public double getSpeed2() {
+    return intake.getSpeed2();
+  }
+
+  public void setSpeed1(double value) {
+    if (value == getSpeed1()) return;
+
+    intake.setSpeed1(value);
+  }
+
+  public void setSpeed2(double value) {
+    if (value == getSpeed2()) return;
+
+    intake.setSpeed2(value);
+  }
+
   public void intake() {
-    // Check sensor 1
-    intake.setSpeed1(0.8);
-    
-    // Check sensor 2
-    intake.setSpeed2(0.8);
+    if (!stopped1) {
+      setSpeed1(INTAKE_SPEED);
+    }
+
+    if (!stopped2) {
+      setSpeed2(INTAKE_SPEED);
+    }
+  }
+
+  public void intake(boolean force) {
+    if (force) {
+      setSpeed1(INTAKE_SPEED);
+      setSpeed2(INTAKE_SPEED);
+    } else {
+      intake();
+    }
   }
 
   public void eject() {
-    intake.setSpeed1(-0.8);
-    intake.setSpeed2(-0.8);
+    setSpeed1(-INTAKE_SPEED);
+    setSpeed2(-INTAKE_SPEED);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if (sensor1.isTriggered()/* && getSpeed1() > 0.08*/) {
+      setSpeed1(-0.05);
+      stopped1 = true;
+    } else if (!sensor1.isTriggered()) {
+      stopped1 = false;
+    }
   }
 
   @Override

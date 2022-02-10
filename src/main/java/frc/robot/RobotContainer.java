@@ -10,14 +10,18 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.robot.commands.AutonomousCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PistonCommand;
+import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.DoubleMotors;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PistonSubsystem;
+import frc.robot.subsystems.SensorSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import lib.components.LogitechJoystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import static frc.robot.Constants.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -28,22 +32,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  public final LogitechJoystick joystick1 = new LogitechJoystick(Constants.joystickport1);
-  public final LogitechJoystick joystick2 = new LogitechJoystick(Constants.joystickport2);
-  private final LogitechJoystick joystick3 = new LogitechJoystick(Constants.joystickport3);
-  private final LogitechJoystick joystick4 = new LogitechJoystick(Constants.joystickport4);
+  public final LogitechJoystick joystick1 = new LogitechJoystick(joystickport1);
+  public final LogitechJoystick joystick2 = new LogitechJoystick(joystickport2);
+  private final LogitechJoystick joystick3 = new LogitechJoystick(joystickport3);
+  private final LogitechJoystick joystick4 = new LogitechJoystick(joystickport4);
 
-  public final PowerDistribution pdp = new PowerDistribution(4, ModuleType.kRev);
-  public final PneumaticHub m_pneumaticHub = new PneumaticHub(5);
+  public final PowerDistribution pdp = new PowerDistribution(10, ModuleType.kRev);
+  public final PneumaticHub m_pneumaticHub = new PneumaticHub(11);
   // private final CompressorSubsystem m_compressorSubsystem = new CompressorSubsystem();
   
   public final PistonSubsystem piston1 = new PistonSubsystem(m_pneumaticHub, 0, 1, 2, 3, 4, 5);
-  public final DoubleMotors driveLeft = new DoubleMotors(0, 1);
-  public final DoubleMotors driveRight = new DoubleMotors(2, 3);
+  public final DoubleMotors driveLeft = new DoubleMotors(18, 19, true);
+  public final DoubleMotors driveRight = new DoubleMotors(0, 1, false);
   public final DriveTrain driveTrain = new DriveTrain(driveLeft, driveRight);
 
-  public final IntakeSubsystem intake = new IntakeSubsystem(6, 7);
-  public final ShooterSubsystem shooter = new ShooterSubsystem(intake, 4, 5);
+  public final SensorSubsystem sensor1 = new SensorSubsystem(0);
+  public final SensorSubsystem sensor2 = new SensorSubsystem(1);
+  public final IntakeSubsystem intake = new IntakeSubsystem(sensor1, 3, 2);
+  public final ShooterSubsystem shooter = new ShooterSubsystem(intake, 4, 17);
 
   private final AutonomousCommand m_autoCommand = new AutonomousCommand(driveTrain);
 
@@ -60,23 +66,31 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    joystick3.btn_1.whenPressed(() -> {
-      intake.intake();
-    });
-    joystick3.btn_1.whenReleased(() -> {
-      intake.stop();
-    });
+    joystick1.btn_1.whenPressed(new IntakeCommand(intake, IN))
+                   .whenReleased(new IntakeCommand(intake, STOP));
+    joystick1.btn_2.whenPressed(new IntakeCommand(intake, OUT))
+                   .whenReleased(new IntakeCommand(intake, STOP));
 
-    joystick4.btn_1.whenPressed(() -> {
-      shooter.shoot();
-    });
-    joystick4.btn_1.whenReleased(() -> {
-      shooter.stop();
-    });
-    joystick4.btn_3.whenPressed(new PistonCommand(piston1, Constants.STOP));
-    joystick4.btn_4.whenPressed(new PistonCommand(piston1, Constants.STOP));
-    joystick4.btn_5.whenPressed(new PistonCommand(piston1, Constants.UP));
-    joystick4.btn_6.whenPressed(new PistonCommand(piston1, Constants.DOWN));
+    joystick2.btn_1.whenPressed(new ShootCommand(shooter, OUT))
+                   .whenReleased(new ShootCommand(shooter, STOP));
+    
+    joystick3.btn_7.whileHeld(() -> { shooter.setSpeed(SHOOTER_SPEED); })
+                   .whenReleased(() -> { shooter.setSpeed(0.0); });
+    joystick3.btn_8.whileHeld(() -> { shooter.setSpeed(-SHOOTER_SPEED); })
+                   .whenReleased(() -> { shooter.setSpeed(0.0); });
+    joystick3.btn_9.whileHeld(() -> { intake.setSpeed1(INTAKE_SPEED); })
+                   .whenReleased(() -> { intake.setSpeed1(0.0); });
+    joystick3.btn_10.whileHeld(() -> { intake.setSpeed1(-INTAKE_SPEED); })
+                    .whenReleased(() -> { intake.setSpeed1(0.0); });
+    joystick3.btn_11.whileHeld(() -> { intake.setSpeed2(INTAKE_SPEED); })
+                    .whenReleased(() -> { intake.setSpeed2(0.0); });
+    joystick3.btn_12.whileHeld(() -> { intake.setSpeed2(-INTAKE_SPEED); })
+                    .whenReleased(() -> { intake.setSpeed2(0.0); });
+
+    joystick4.btn_3.whenPressed(new PistonCommand(piston1, STOP));
+    joystick4.btn_4.whenPressed(new PistonCommand(piston1, STOP));
+    joystick4.btn_5.whenPressed(new PistonCommand(piston1, UP));
+    joystick4.btn_6.whenPressed(new PistonCommand(piston1, DOWN));
   }
 
   /**

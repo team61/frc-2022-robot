@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import static frc.robot.Constants.*;
 
 public class PistonSubsystem extends SubsystemBase {
   public DoubleSolenoid pistonSolenoid;
@@ -38,7 +38,7 @@ public class PistonSubsystem extends SubsystemBase {
   }
 
   public void toggle() {
-    if (direction == Constants.UP) {
+    if (direction == UP) {
       retract();
     } else {
       extend();
@@ -52,7 +52,7 @@ public class PistonSubsystem extends SubsystemBase {
     //pistonSolenoid2.set(false);
     pistonSolenoid.set(Value.kForward);
 
-    direction = Constants.UP;
+    direction = UP;
   }
 
   public void retract() {
@@ -62,7 +62,7 @@ public class PistonSubsystem extends SubsystemBase {
     //pistonSolenoid2.set(true);
     pistonSolenoid.set(Value.kReverse);
     
-    direction = Constants.DOWN;
+    direction = DOWN;
   }
 
   private void stopDown() {

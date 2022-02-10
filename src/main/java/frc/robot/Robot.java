@@ -105,6 +105,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    m_robotContainer.intake.stop();
+    m_robotContainer.shooter.stop();
     m_robotContainer.piston1.release();
     m_robotContainer.piston1.retract();
   }

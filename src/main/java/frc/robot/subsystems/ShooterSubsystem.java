@@ -4,10 +4,11 @@
 
 package frc.robot.subsystems;
 
-import java.util.Date;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.IntakeCommand;
+
+import static frc.robot.Constants.*;
 
 public class ShooterSubsystem extends SubsystemBase {
   public DoubleMotors shooter;
@@ -16,20 +17,35 @@ public class ShooterSubsystem extends SubsystemBase {
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem(IntakeSubsystem intake, int id1, int id2) {
-    shooter = new DoubleMotors(id1, id2);
+    shooter = new DoubleMotors(id1, id2, false);
+    shooter.motor2.setInverted(true);
     intakeSubsystem = intake;
   }
 
-  public void shoot() {
-    shooter.setSpeed(0.8);
+  public void setSpeed(double value) {
+    shooter.setSpeed(value);
+  }
 
-    Timer.delay(1);
-    intakeSubsystem.eject();
+  public void shoot() {
+    setSpeed(SHOOTER_SPEED);
+
+    // new IntakeCommand(intakeSubsystem, IN).withTimeout(1).schedule();
+    // Timer.delay(1);
+    intakeSubsystem.intake(true);
+    // new Thread(() -> {
+    //   try {
+    //       Thread.sleep(1000);
+    //       intakeSubsystem.intake();
+    //   }
+    //   catch (Exception e){
+    //       System.err.println(e);
+    //   }
+    // }).start();
   }
 
   public void stop() {
     isShooting = false;
-    shooter.setSpeed(0.0);
+    setSpeed(0.0);
     intakeSubsystem.stop();
   }
 

@@ -20,5 +20,10 @@ public final class Constants {
 
     public static final String UP = "up";
     public static final String DOWN = "down";
+    public static final String IN = "in";
+    public static final String OUT = "out";
     public static final String STOP = "stop";
+
+    public static final double INTAKE_SPEED = 0.4;
+    public static final double SHOOTER_SPEED = 0.2;
 }

@@ -14,9 +14,20 @@ public class DoubleMotors extends SubsystemBase {
   public TalonFX motor2;
 
   /** Creates a new DoubleMotors. */
-  public DoubleMotors(int id1, int id2) {
+  public DoubleMotors(int id1, int id2, boolean invert) {
     motor1 = new TalonFX(id1);
     motor2 = new TalonFX(id2);
+
+    motor1.setInverted(invert);
+    motor2.setInverted(invert);
+  }
+
+  public double getSpeed1() {
+    return motor1.getMotorOutputPercent();
+  }
+
+  public double getSpeed2() {
+    return motor2.getMotorOutputPercent();
   }
 
   public void setSpeed1(double s) {
