@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Playback;
 import frc.robot.commands.DriveCommand;
 import lib.components.LogitechJoystick;
-import static frc.robot.Constants.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -50,7 +49,7 @@ public class Robot extends TimedRobot {
 
     addPeriodic(() -> {
       if (!inAutonomous) return;
-      
+
       for (int i = 0; i < 6; i++) {
         m_robotContainer.ledStrip.setRGB(i, colors[i][0], colors[i][1], colors[i][2]);
       }
@@ -140,6 +139,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.shooter.stop();
     m_robotContainer.piston1.release();
     m_robotContainer.piston1.retract();
+    m_robotContainer.piston2.release();
+    m_robotContainer.piston2.retract();
 
     teleopStartTime = System.currentTimeMillis();
   }

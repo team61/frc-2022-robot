@@ -41,8 +41,9 @@ public class RobotContainer {
   public final PowerDistribution pdp = new PowerDistribution(10, ModuleType.kRev);
   public final PneumaticHub m_pneumaticHub = new PneumaticHub(11);
   // private final CompressorSubsystem m_compressorSubsystem = new CompressorSubsystem();
-  
   public final PistonSubsystem piston1 = new PistonSubsystem(m_pneumaticHub, 0, 1, 2, 3, 4, 5);
+  public final PistonSubsystem piston2 = new PistonSubsystem(m_pneumaticHub, 15, 14, 13, 12, 11, 10);
+
   public final DoubleMotors driveLeft = new DoubleMotors(18, 19, true);
   public final DoubleMotors driveRight = new DoubleMotors(0, 1, false);
   public final DriveTrain driveTrain = new DriveTrain(driveLeft, driveRight);
@@ -89,6 +90,11 @@ public class RobotContainer {
                     .whenReleased(() -> { intake.setSpeed2(0.0); });
     joystick3.btn_12.whileHeld(() -> { intake.setSpeed2(-INTAKE_2_SPEED); })
                     .whenReleased(() -> { intake.setSpeed2(0.0); });
+    
+    joystick3.btn_3.whenPressed(new PistonCommand(piston2, STOP));
+    joystick3.btn_4.whenPressed(new PistonCommand(piston2, STOP));
+    joystick3.btn_5.whenPressed(new PistonCommand(piston2, UP));
+    joystick3.btn_6.whenPressed(new PistonCommand(piston2, DOWN));
 
     joystick4.btn_3.whenPressed(new PistonCommand(piston1, STOP));
     joystick4.btn_4.whenPressed(new PistonCommand(piston1, STOP));
