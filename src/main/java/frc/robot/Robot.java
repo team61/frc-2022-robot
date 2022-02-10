@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Playback;
 import frc.robot.commands.DriveCommand;
 import lib.components.LogitechJoystick;
+import static frc.robot.Constants.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,11 +23,11 @@ import lib.components.LogitechJoystick;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
   private RobotContainer m_robotContainer;
 
   private ArrayList<double[]> speeds = new ArrayList<>();
   private boolean recording = false;
+  private long teleopStartTime = 0;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -58,6 +59,8 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    m_robotContainer.ledStrip.turnOff();
+
     if (!recording) return;
     recording = false;
 
@@ -78,7 +81,15 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    for (int i = 0; i < 4; i++) {
+      if (i % 2 == 0) {
+        m_robotContainer.ledStrip.setRGB(i, 255, 0, 255);
+      } else {
+        m_robotContainer.ledStrip.setRGB(i, 255, 128, 0);
+      }
+    }
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -109,6 +120,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.shooter.stop();
     m_robotContainer.piston1.release();
     m_robotContainer.piston1.retract();
+
+    teleopStartTime = System.currentTimeMillis();
   }
 
   /** This function is called periodically during operator control. */
@@ -122,6 +135,35 @@ public class Robot extends TimedRobot {
     double speedPercentage2 = joystick2.getYAxis() * Math.abs(joystick2.getYAxis());
 
     new DriveCommand(m_robotContainer.driveTrain, speedPercentage1, speedPercentage2).schedule();
+
+    long currentTimeMillis = System.currentTimeMillis();
+    double secondsDiff = ((double)currentTimeMillis - (double)teleopStartTime) / 1000;
+    if (secondsDiff < 75) {
+      m_robotContainer.ledStrip.setStripRGB(0, 255, 0);
+    } else if (secondsDiff < 105) {
+      m_robotContainer.ledStrip.setStripRGB(255, 64, 0);
+    } else if (secondsDiff < 120) {
+      m_robotContainer.ledStrip.setStripRGB(255, 0, 0);
+    } else/* if (secondsDiff < 135) */{
+      if (Math.round(secondsDiff * 2) == Math.floor(secondsDiff * 2)) {
+        m_robotContainer.ledStrip.setStripRGB(255, 0, 0);
+      } else {
+        m_robotContainer.ledStrip.turnOff();
+      }
+    }/* else {
+      for (int i = 0; i < 4; i++) {
+        if (i % 2 == 0) {
+          m_robotContainer.ledStrip.setRGB(i, 255, 0, 255);
+        } else {
+          m_robotContainer.ledStrip.setRGB(i, 255, 128, 0);
+        }
+      }
+    }*/
+
+    // green until 1 min left
+    // orange until 30s left
+    // red until 15s left
+    // blinking red till end
   }
 
   @Override

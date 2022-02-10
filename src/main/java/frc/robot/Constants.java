@@ -25,5 +25,8 @@ public final class Constants {
     public static final String STOP = "stop";
 
     public static final double INTAKE_SPEED = 0.4;
-    public static final double SHOOTER_SPEED = 0.2;
+    public static final double SHOOTER_SPEED = 1.0;
+
+    public static final int LEDStripPort = 0;
+    public static final int LEDStripLength = 68;
 }

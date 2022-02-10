@@ -16,6 +16,7 @@ import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.DoubleMotors;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDStripSubsystem;
 import frc.robot.subsystems.PistonSubsystem;
 import frc.robot.subsystems.SensorSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -50,6 +51,8 @@ public class RobotContainer {
   public final SensorSubsystem sensor2 = new SensorSubsystem(1);
   public final IntakeSubsystem intake = new IntakeSubsystem(sensor1, 3, 2);
   public final ShooterSubsystem shooter = new ShooterSubsystem(intake, 4, 17);
+
+  public final LEDStripSubsystem ledStrip = new LEDStripSubsystem(LEDStripPort, LEDStripLength);
 
   private final AutonomousCommand m_autoCommand = new AutonomousCommand(driveTrain);
 
