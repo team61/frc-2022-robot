@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Playback;
 import frc.robot.commands.DriveCommand;
 import lib.components.LogitechJoystick;
+import static frc.robot.Constants.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -83,7 +84,7 @@ public class Robot extends TimedRobot {
 
     String output = "speeds = new double[][]{";
     for (double[] speed : speeds) {
-      output += "new double[]{" + speed[0] + "," + speed[1] + "},";
+      output += "new double[]{" + speed[0] + "," + speed[1] + "," + speed[2] + "," + speed[3] + "},";
     }
     output += "};";
 
@@ -137,10 +138,10 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.intake.stop();
     m_robotContainer.shooter.stop();
-    m_robotContainer.piston1.release();
-    m_robotContainer.piston1.retract();
-    m_robotContainer.piston2.release();
-    m_robotContainer.piston2.retract();
+    // m_robotContainer.piston1.release();
+    // m_robotContainer.piston1.retract();
+    // m_robotContainer.piston2.release();
+    // m_robotContainer.piston2.retract();
 
     teleopStartTime = System.currentTimeMillis();
   }
@@ -204,9 +205,21 @@ public class Robot extends TimedRobot {
     // Get the value and square but keep sign
     double speedPercentage1 = joystick1.getYAxis() * Math.abs(joystick1.getYAxis());
     double speedPercentage2 = joystick2.getYAxis() * Math.abs(joystick2.getYAxis());
-
     m_robotContainer.driveTrain.drive(speedPercentage1, speedPercentage2);
 
-    speeds.add(new double[] {speedPercentage1, speedPercentage2});
+    boolean intakePressed = joystick1.getRawButtonPressed(2);
+    boolean shooterPressed = joystick2.getRawButtonPressed(2);
+
+    if (intakePressed) {
+      m_robotContainer.intake.intake();
+    }
+
+    if (shooterPressed) {
+      m_robotContainer.shooter.shoot();
+    }
+
+    speeds.add(new double[] {
+      speedPercentage1, speedPercentage2, intakePressed ? 1.0 : 0.0, shooterPressed ? 1.0 : 0.0
+    });
   }
 }

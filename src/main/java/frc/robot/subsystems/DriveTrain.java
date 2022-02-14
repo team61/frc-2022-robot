@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrain extends SubsystemBase {
@@ -15,11 +14,6 @@ public class DriveTrain extends SubsystemBase {
   public DriveTrain(DoubleMotors l, DoubleMotors r) {
     driveLeft = l;
     driveRight = r;
-  }
-
-  public void driveTime(double l, double r, double s) {
-    drive(l, r);
-    Timer.delay(2);
   }
 
   public void stop() {

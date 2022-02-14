@@ -12,7 +12,8 @@ import static frc.robot.Constants.*;
 public class IntakeCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final IntakeSubsystem m_subsystem;
-  private String direction;
+  private final String direction;
+  private boolean finished = false;
 
   /**
    * Creates a new DriveCommand.
@@ -40,15 +41,19 @@ public class IntakeCommand extends CommandBase {
     } else if (direction == STOP) {
       m_subsystem.stop();
     }
+
+    end(false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    finished = true;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finished;
   }
 }

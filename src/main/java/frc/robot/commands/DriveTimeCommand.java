@@ -4,16 +4,17 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.DriveTrain;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import static frc.robot.Constants.*;
-import static frc.robot.Globals.*;
 
 /** An example command that uses an example subsystem. */
-public class ShootCommand extends CommandBase {
+public class DriveTimeCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ShooterSubsystem m_subsystem;
-  private final String direction;
+  private final DriveTrain m_subsystem;
+  private final double lSpeed;
+  private final double rSpeed;
+  private final double delay;
   private boolean finished = false;
 
   /**
@@ -21,9 +22,11 @@ public class ShootCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ShootCommand(ShooterSubsystem subsystem, String dir) {
+  public DriveTimeCommand(DriveTrain subsystem, double s1, double s2, double time) {
     m_subsystem = subsystem;
-    direction = dir;
+    lSpeed = s1;
+    rSpeed = s2;
+    delay = time;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -35,14 +38,9 @@ public class ShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (direction == OUT) {
-      IS_SHOOTING = true;
-      m_subsystem.shoot();
-    } else if (direction == STOP) {
-      IS_SHOOTING = false;
-      m_subsystem.stop();
-    }
+    m_subsystem.drive(lSpeed, rSpeed);
 
+    Timer.delay(delay);
     end(false);
   }
 

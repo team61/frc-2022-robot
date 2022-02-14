@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DriveTrain;
+import static frc.robot.Globals.*;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -12,8 +13,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DriveCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveTrain m_subsystem;
-  private double lSpeed;
-  private double rSpeed;
+  private final double lSpeed;
+  private final double rSpeed;
+  private boolean finished = false;
 
   /**
    * Creates a new DriveCommand.
@@ -35,16 +37,20 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.drive(lSpeed, rSpeed);
+    m_subsystem.drive(lSpeed * MOTOR_COEFFICIENT, rSpeed * MOTOR_COEFFICIENT);
+
+    end(false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    finished = true;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finished;
   }
 }

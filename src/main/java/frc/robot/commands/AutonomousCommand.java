@@ -5,25 +5,31 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DriveTrain;
-
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
 public class AutonomousCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveTrain m_subsystem;
-  private boolean playbackReady = false;
+  private final DriveTrain drivetrain;
+  private final IntakeSubsystem intake;
+  private final ShooterSubsystem shooter;
   private int speedIndex = 0;
+  private boolean playbackReady = false;
+  private boolean startedScriptedAutonomous = false;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AutonomousCommand(DriveTrain subsystem) {
-    m_subsystem = subsystem;
+  public AutonomousCommand(DriveTrain d, IntakeSubsystem i, ShooterSubsystem s) {
+    drivetrain = d;
+    intake = i;
+    shooter = s;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(d, i, s);
   }
 
   // Called when the command is initially scheduled.
@@ -32,14 +38,29 @@ public class AutonomousCommand extends CommandBase {
     //m_subsystem.driveTime(0.2, 0.2, 2);
     //m_subsystem.stop();
     playbackReady = true;
+    startedScriptedAutonomous = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (!playbackReady) return;
-    Playback.run(m_subsystem, speedIndex);
-    speedIndex++;
+    boolean res = Playback.run(drivetrain, intake, shooter, speedIndex);
+
+    if (res) {
+      speedIndex++;
+    } else if (!startedScriptedAutonomous) {
+      startedScriptedAutonomous = true;
+
+      runScriptedAutonomous();
+    }
+  }
+
+  private void runScriptedAutonomous() {
+    // new DriveTimeCommand(drivetrain, 0.2, 0.2, 0.5).andThen(
+    // new DriveTimeCommand(drivetrain, -0.2, -0.2, 0.5)).andThen(
+    // new DriveTimeCommand(drivetrain, 0.0, 0.0, 0.5))
+    // .schedule();
   }
 
   // Called once the command ends or is interrupted.

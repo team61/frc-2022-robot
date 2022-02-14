@@ -13,6 +13,7 @@ public class PistonCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final PistonSubsystem m_subsystem;
   private final String direction;
+  private boolean finished = false;
 
   /**
    * Creates a new PistonCommand.
@@ -42,15 +43,19 @@ public class PistonCommand extends CommandBase {
       m_subsystem.release();
       m_subsystem.retract();
     }
+
+    end(false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    finished = true;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finished;
   }
 }

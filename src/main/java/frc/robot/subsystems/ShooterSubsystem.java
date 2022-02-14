@@ -29,16 +29,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // new IntakeCommand(intakeSubsystem, IN).withTimeout(1).schedule();
     // Timer.delay(1);
-    intakeSubsystem.intake(true);
-    // new Thread(() -> {
-    //   try {
-    //       Thread.sleep(1000);
-    //       intakeSubsystem.intake();
-    //   }
-    //   catch (Exception e){
-    //       System.err.println(e);
-    //   }
-    // }).start();
+    // intakeSubsystem.intake(true);
+    new Thread(() -> {
+      try {
+          Thread.sleep(1000);
+          intakeSubsystem.intake(true);
+      }
+      catch (Exception e){
+          System.err.println(e);
+      }
+    }).start();
   }
 
   public void stop() {

@@ -23,6 +23,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import lib.components.LogitechJoystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import static frc.robot.Constants.*;
+import static frc.robot.Globals.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -55,7 +56,7 @@ public class RobotContainer {
 
   public final LEDStripSubsystem ledStrip = new LEDStripSubsystem(LEDStripPort, LEDStripLength);
 
-  private final AutonomousCommand m_autoCommand = new AutonomousCommand(driveTrain);
+  private final AutonomousCommand m_autoCommand = new AutonomousCommand(driveTrain, intake, shooter);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -77,7 +78,11 @@ public class RobotContainer {
 
     joystick2.btn_1.whenPressed(new ShootCommand(shooter, OUT))
                    .whenReleased(new ShootCommand(shooter, STOP));
+    joystick2.btn_2.whenPressed(() -> { MOTOR_COEFFICIENT = 0.5; })
+                   .whenReleased(() -> { MOTOR_COEFFICIENT = 1.0; });
     
+    joystick3.btn_2.whenPressed(new IntakeCommand(intake, OUT))
+                   .whenReleased(new IntakeCommand(intake, STOP));
     joystick3.btn_7.whileHeld(() -> { shooter.setSpeed(SHOOTER_SPEED); })
                    .whenReleased(() -> { shooter.setSpeed(0.0); });
     joystick3.btn_8.whileHeld(() -> { shooter.setSpeed(-SHOOTER_SPEED); })

@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
+import static frc.robot.Globals.*;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class IntakeSubsystem extends SubsystemBase {
   private DoubleMotors intake;
@@ -58,8 +61,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void intake(boolean force) {
     if (force) {
-      setSpeed1(INTAKE_1_SPEED);
-      setSpeed2(INTAKE_2_SPEED);
+      intake.motor1.set(ControlMode.PercentOutput, INTAKE_1_SPEED);
+      intake.motor2.set(ControlMode.PercentOutput, INTAKE_2_SPEED);
     } else {
       intake();
     }
@@ -72,6 +75,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (IS_SHOOTING) return;
+
     if (sensor1.isTriggered()) {
       setSpeed1(-0.05);
       stopped1 = true;
