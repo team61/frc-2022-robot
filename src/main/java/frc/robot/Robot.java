@@ -136,6 +136,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    m_robotContainer.driveTrain.stop();
     m_robotContainer.intake.stop();
     m_robotContainer.shooter.stop();
     // m_robotContainer.piston1.release();
@@ -194,6 +195,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
     speeds.clear();
     recording = true;
+    m_robotContainer.driveTrain.stop();
   }
 
   /** This function is called periodically during test mode. */
@@ -207,19 +209,25 @@ public class Robot extends TimedRobot {
     double speedPercentage2 = joystick2.getYAxis() * Math.abs(joystick2.getYAxis());
     m_robotContainer.driveTrain.drive(speedPercentage1, speedPercentage2);
 
-    boolean intakePressed = joystick1.getRawButtonPressed(2);
-    boolean shooterPressed = joystick2.getRawButtonPressed(2);
-
-    if (intakePressed) {
-      m_robotContainer.intake.intake();
-    }
+    boolean intakePressed = joystick1.getRawButton(1);
+    boolean shooterPressed = joystick2.getRawButton(1);
 
     if (shooterPressed) {
       m_robotContainer.shooter.shoot();
+    } else {
+      m_robotContainer.shooter.stop();
+    }
+
+    if (intakePressed) {
+      m_robotContainer.intake.intake();
+    } else {
+      m_robotContainer.intake.stop();
     }
 
     speeds.add(new double[] {
-      speedPercentage1, speedPercentage2, intakePressed ? 1.0 : 0.0, shooterPressed ? 1.0 : 0.0
+      speedPercentage1, speedPercentage2,
+      m_robotContainer.intake.getSpeed1(), m_robotContainer.intake.getSpeed2(),
+      m_robotContainer.shooter.shooter.getSpeed1()
     });
   }
 }

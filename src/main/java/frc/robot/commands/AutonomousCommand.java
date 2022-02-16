@@ -52,15 +52,15 @@ public class AutonomousCommand extends CommandBase {
     } else if (!startedScriptedAutonomous) {
       startedScriptedAutonomous = true;
 
-      runScriptedAutonomous();
+      // runScriptedAutonomous();
     }
   }
 
   private void runScriptedAutonomous() {
-    // new DriveTimeCommand(drivetrain, 0.2, 0.2, 0.5).andThen(
-    // new DriveTimeCommand(drivetrain, -0.2, -0.2, 0.5)).andThen(
-    // new DriveTimeCommand(drivetrain, 0.0, 0.0, 0.5))
-    // .schedule();
+    new DriveTimeCommand(drivetrain, 0.2, 0.2, 0.5).andThen(
+    new DriveTimeCommand(drivetrain, -0.6, -0.6, 0.5)).andThen(
+    new DriveTimeCommand(drivetrain, 0.0, 0.0, 0.5))
+    .schedule();
   }
 
   // Called once the command ends or is interrupted.

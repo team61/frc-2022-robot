@@ -12,13 +12,10 @@ public final class Playback {
     if (index >= speeds.length) return false;
 
     drivetrain.drive(speeds[index][0], speeds[index][1]);
-    if (speeds[index][2] == 1.0) {
-      intake.intake();
-    }
 
-    if (speeds[index][3] == 1.0) {
-      shooter.shoot();
-    }
+    intake.setSpeed1(speeds[index][2]);
+    intake.setSpeed2(speeds[index][3]);
+    shooter.setSpeed(speeds[index][4]);
 
     return true;
   }
