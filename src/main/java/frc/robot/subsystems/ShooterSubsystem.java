@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.*;
+import static frc.robot.Globals.*;
 
 public class ShooterSubsystem extends SubsystemBase {
   public DoubleMotors shooter;
@@ -25,6 +26,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void shoot() {
+    IS_SHOOTING = true;
     setSpeed(SHOOTER_SPEED);
 
     // new IntakeCommand(intakeSubsystem, IN).withTimeout(1).schedule();
@@ -43,6 +45,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void stop() {
     isShooting = false;
+    IS_SHOOTING = false;
     setSpeed(0.0);
     intakeSubsystem.stop();
   }

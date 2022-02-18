@@ -85,7 +85,7 @@ public class RobotContainer {
 
     joystick2.btn_1.whenPressed(new ShootCommand(shooter, OUT))
                    .whenReleased(new ShootCommand(shooter, STOP));
-    joystick2.btn_2.whenPressed(() -> { MOTOR_COEFFICIENT = 0.5; })
+    joystick2.btn_2.whenPressed(() -> { MOTOR_COEFFICIENT = 0.2; })
                    .whenReleased(() -> { MOTOR_COEFFICIENT = 1.0; });
     
     joystick3.btn_2.whenPressed(new IntakeCommand(intake, OUT))
@@ -108,6 +108,9 @@ public class RobotContainer {
     joystick3.btn_5.whenPressed(new PistonCommand(piston2, UP));
     joystick3.btn_6.whenPressed(new PistonCommand(piston2, DOWN));
 
+    joystick4.btn_2.whenPressed(() -> {
+      System.out.println(RECORDING_OUTPUT);
+    });
     joystick4.btn_3.whenPressed(new PistonCommand(piston1, STOP));
     joystick4.btn_4.whenPressed(new PistonCommand(piston1, STOP));
     joystick4.btn_5.whenPressed(new PistonCommand(piston1, UP));

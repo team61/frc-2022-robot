@@ -26,6 +26,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void stop() {
+    IS_EJECTING = false;
     intake.setSpeed(0.0);
   }
 
@@ -69,13 +70,14 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void eject() {
+    IS_EJECTING = true;
     setSpeed1(-INTAKE_1_SPEED);
     setSpeed2(-INTAKE_2_SPEED);
   }
 
   @Override
   public void periodic() {
-    if (IS_SHOOTING) return;
+    if (IS_SHOOTING || IS_EJECTING) return;
 
     if (sensor1.isTriggered()) {
       setSpeed1(-0.05);

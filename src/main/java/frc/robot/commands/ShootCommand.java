@@ -7,7 +7,6 @@ package frc.robot.commands;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.robot.Constants.*;
-import static frc.robot.Globals.*;
 
 /** An example command that uses an example subsystem. */
 public class ShootCommand extends CommandBase {
@@ -36,10 +35,8 @@ public class ShootCommand extends CommandBase {
   @Override
   public void execute() {
     if (direction == OUT) {
-      IS_SHOOTING = true;
       m_subsystem.shoot();
     } else if (direction == STOP) {
-      IS_SHOOTING = false;
       m_subsystem.stop();
     }
 

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Playback;
 import frc.robot.commands.DriveCommand;
 import lib.components.LogitechJoystick;
-import static frc.robot.Constants.*;
+import static frc.robot.Globals.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -71,12 +71,17 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    //System.out.println(m_robotContainer.joystick1.getYAxis());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
     m_robotContainer.ledStrip.turnOff();
+    m_robotContainer.driveTrain.stop();
+    m_robotContainer.intake.stop();
+    m_robotContainer.shooter.stop();
 
     if (inAutonomous) inAutonomous = false;
     if (!recording) return;
@@ -84,9 +89,10 @@ public class Robot extends TimedRobot {
 
     String output = "speeds = new double[][]{";
     for (double[] speed : speeds) {
-      output += "new double[]{" + speed[0] + "," + speed[1] + "," + speed[2] + "," + speed[3] + "},";
+      output += "new double[]{" + speed[0] + "," + speed[1] + "," + speed[2] + "," + speed[3] + "," + speed[4] + "," + speed[5] + "," + speed[6] + "},";
     }
     output += "};";
+    RECORDING_OUTPUT = output;
 
     Playback.speeds = new double[speeds.size()][];
     for (int i = 0; i < speeds.size(); i++) {
@@ -119,6 +125,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
 
+    m_robotContainer.driveTrain.stop();
     inAutonomous = true;
   }
 
@@ -224,10 +231,22 @@ public class Robot extends TimedRobot {
       m_robotContainer.intake.stop();
     }
 
+    boolean stopped1 = false;
+
+    if (m_robotContainer.sensor1.isTriggered()) {
+      m_robotContainer.intake.setSpeed1(-0.05);
+      stopped1 = true;
+    }
+
+    if (m_robotContainer.sensor2.isTriggered() && stopped1) {
+      m_robotContainer.intake.setSpeed2(-0.05);
+    }
+
     speeds.add(new double[] {
       speedPercentage1, speedPercentage2,
       m_robotContainer.intake.getSpeed1(), m_robotContainer.intake.getSpeed2(),
-      m_robotContainer.shooter.shooter.getSpeed1()
+      m_robotContainer.shooter.shooter.getSpeed1(),
+      m_robotContainer.sensor1.isTriggered() ? 1.0 : 0.0, m_robotContainer.sensor2.isTriggered() ? 1.0 : 0.0
     });
   }
 }
