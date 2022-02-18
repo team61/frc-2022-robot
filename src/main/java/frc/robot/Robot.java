@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Playback;
+import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.DriveCommand;
 import lib.components.LogitechJoystick;
 import static frc.robot.Globals.*;
@@ -118,14 +119,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
-
     m_robotContainer.driveTrain.stop();
+    new AutonomousCommand(m_robotContainer.driveTrain, m_robotContainer.intake, m_robotContainer.shooter).schedule();
     inAutonomous = true;
   }
 
