@@ -22,7 +22,9 @@ public final class Constants {
     public static final String DOWN = "down";
     public static final String IN = "in";
     public static final String OUT = "out";
+    public static final String SLOW = "slow";
     public static final String STOP = "stop";
+    public static final String RESET = "reset";
 
     public static final double INTAKE_1_SPEED = 1.0;
     public static final double INTAKE_2_SPEED = 0.4;

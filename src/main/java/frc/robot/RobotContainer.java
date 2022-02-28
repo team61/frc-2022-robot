@@ -16,6 +16,7 @@ import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PistonCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.SlowdownCommand;
 import frc.robot.subsystems.DoubleMotors;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -85,8 +86,8 @@ public class RobotContainer {
 
     joystick2.btn_1.whenPressed(new ShootCommand(shooter, OUT))
                    .whenReleased(new ShootCommand(shooter, STOP));
-    joystick2.btn_2.whenPressed(() -> { MOTOR_COEFFICIENT = 0.2; })
-                   .whenReleased(() -> { MOTOR_COEFFICIENT = 1.0; });
+    joystick2.btn_2.whenPressed(new SlowdownCommand(SLOW))
+                   .whenReleased(new SlowdownCommand(RESET));
     
     joystick3.btn_2.whenPressed(new IntakeCommand(intake, OUT))
                    .whenReleased(new IntakeCommand(intake, STOP));

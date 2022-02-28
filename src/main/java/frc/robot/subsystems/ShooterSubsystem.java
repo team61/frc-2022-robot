@@ -28,18 +28,12 @@ public class ShooterSubsystem extends SubsystemBase {
   public void shoot() {
     IS_SHOOTING = true;
     setSpeed(SHOOTER_SPEED);
-
-    // new IntakeCommand(intakeSubsystem, IN).withTimeout(1).schedule();
-    // Timer.delay(1);
-    // intakeSubsystem.intake(true);
+    
     new Thread(() -> {
       try {
           Thread.sleep(1000);
           intakeSubsystem.intake(true);
-      }
-      catch (Exception e){
-          System.err.println(e);
-      }
+      } catch (Exception e) { System.err.println(e); }
     }).start();
   }
 
