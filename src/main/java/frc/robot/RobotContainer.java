@@ -7,13 +7,19 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.robot.commands.AutonomousCommand;
+import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.LimelightCommand;
 import frc.robot.commands.PistonCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.SlowdownCommand;
@@ -48,6 +54,7 @@ public class RobotContainer {
   // private final CompressorSubsystem m_compressorSubsystem = new CompressorSubsystem();
   public final PistonSubsystem piston1 = new PistonSubsystem(m_pneumaticHub, 0, 1, 2, 3, 4, 5);
   public final PistonSubsystem piston2 = new PistonSubsystem(m_pneumaticHub, 15, 14, 13, 12, 11, 10);
+  public final DoubleSolenoid pistonAdjuster = m_pneumaticHub.makeDoubleSolenoid(8, 9);
 
   public final DoubleMotors driveLeft = new DoubleMotors(18, 19, true);
   public final DoubleMotors driveRight = new DoubleMotors(0, 1, false);
@@ -57,9 +64,11 @@ public class RobotContainer {
   public final SensorSubsystem sensor2 = new SensorSubsystem(1);
   public final IntakeSubsystem intake = new IntakeSubsystem(sensor1, sensor2, 3, 2);
   public final ShooterSubsystem shooter = new ShooterSubsystem(intake, 4, 17);
-
+  
   public final LEDStripSubsystem ledStrip = new LEDStripSubsystem(LEDStripPort, LEDStripLength);
-
+  
+  private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+  private final LimelightCommand m_limelightCommand = new LimelightCommand(table, joystick1, driveTrain); 
   private final AutonomousCommand m_autoCommand = new AutonomousCommand(driveTrain, intake, shooter);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -81,14 +90,15 @@ public class RobotContainer {
   private void configureButtonBindings() {
     joystick1.btn_1.whenPressed(new IntakeCommand(intake, IN))
                    .whenReleased(new IntakeCommand(intake, STOP));
-    joystick1.btn_2.whenPressed(new IntakeCommand(intake, OUT))
-                   .whenReleased(new IntakeCommand(intake, STOP));
+    // joystick1.btn_2.whenPressed(new IntakeCommand(intake, OUT))
+    //                .whenReleased(new IntakeCommand(intake, STOP));
 
     joystick2.btn_1.whenPressed(new ShootCommand(shooter, OUT))
                    .whenReleased(new ShootCommand(shooter, STOP));
     joystick2.btn_2.whenPressed(new SlowdownCommand(SLOW))
                    .whenReleased(new SlowdownCommand(RESET));
     
+    joystick3.btn_1.whenPressed(() -> { pistonAdjuster.toggle(); });
     joystick3.btn_2.whenPressed(new IntakeCommand(intake, OUT))
                    .whenReleased(new IntakeCommand(intake, STOP));
     joystick3.btn_7.whileHeld(() -> { shooter.setSpeed(SHOOTER_SPEED); })
@@ -117,7 +127,11 @@ public class RobotContainer {
     joystick4.btn_5.whenPressed(new PistonCommand(piston1, UP));
     joystick4.btn_6.whenPressed(new PistonCommand(piston1, DOWN));
   }
-
+  
+  public Command getLimelightCommand() {
+    return m_limelightCommand;
+  }
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

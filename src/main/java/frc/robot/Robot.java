@@ -7,6 +7,7 @@ package frc.robot;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Playback;
@@ -24,6 +25,7 @@ import static frc.robot.Globals.*;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private Command m_limelightCommand;
   private RobotContainer m_robotContainer;
 
   private ArrayList<double[]> speeds = new ArrayList<>();
@@ -39,6 +41,10 @@ public class Robot extends TimedRobot {
     new int[] {255, 0, 255}
   };
 
+  public Robot() {
+    super(0.02);
+  }
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -48,14 +54,15 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    m_limelightCommand = m_robotContainer.getLimelightCommand();
 
-    addPeriodic(() -> {
-      if (!inAutonomous) return;
+    // addPeriodic(() -> {
+    //   if (!inAutonomous) return;
 
-      for (int i = 0; i < 6; i++) {
-        m_robotContainer.ledStrip.setRGB(i, colors[i][0], colors[i][1], colors[i][2]);
-      }
-    }, 0.1);
+    //   for (int i = 0; i < 6; i++) {
+    //     m_robotContainer.ledStrip.setRGB(i, colors[i][0], colors[i][1], colors[i][2]);
+    //   }
+    // }, 0.1);
   }
 
   /**
@@ -73,7 +80,9 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    //System.out.println(m_robotContainer.joystick1.getYAxis());
+    if (m_limelightCommand != null) {
+      m_limelightCommand.schedule();
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -107,13 +116,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    for (int i = 0; i < 4; i++) {
-      if (i % 2 == 0) {
-        m_robotContainer.ledStrip.setRGB(i, 255, 0, 255);
-      } else {
-        m_robotContainer.ledStrip.setRGB(i, 255, 128, 0);
-      }
-    }
+    // for (int i = 0; i < 4; i++) {
+    //   if (i % 2 == 0) {
+    //     m_robotContainer.ledStrip.setRGB(i, 255, 0, 255);
+    //   } else {
+    //     m_robotContainer.ledStrip.setRGB(i, 255, 128, 0);
+    //   }
+    // }
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -141,10 +150,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.driveTrain.stop();
     m_robotContainer.intake.stop();
     m_robotContainer.shooter.stop();
-    // m_robotContainer.piston1.release();
-    // m_robotContainer.piston1.retract();
-    // m_robotContainer.piston2.release();
-    // m_robotContainer.piston2.retract();
+    m_robotContainer.pistonAdjuster.set(Value.kForward);
 
     teleopStartTime = System.currentTimeMillis();
   }
@@ -159,23 +165,25 @@ public class Robot extends TimedRobot {
     double speedPercentage1 = joystick1.getYAxis() * Math.abs(joystick1.getYAxis());
     double speedPercentage2 = joystick2.getYAxis() * Math.abs(joystick2.getYAxis());
 
-    new DriveCommand(m_robotContainer.driveTrain, speedPercentage1, speedPercentage2).schedule();
+    if (m_robotContainer.joystick1.btn_2.get()) return;
+    m_robotContainer.driveTrain.drive(speedPercentage1, speedPercentage2);
 
-    long currentTimeMillis = System.currentTimeMillis();
-    double secondsDiff = ((double)currentTimeMillis - (double)teleopStartTime) / 1000;
-    if (secondsDiff < 75) {
-      m_robotContainer.ledStrip.setStripRGB(0, 255, 0);
-    } else if (secondsDiff < 105) {
-      m_robotContainer.ledStrip.setStripRGB(255, 64, 0);
-    } else if (secondsDiff < 120) {
-      m_robotContainer.ledStrip.setStripRGB(255, 0, 0);
-    } else/* if (secondsDiff < 135) */{
-      if (Math.round(secondsDiff * 2) == Math.floor(secondsDiff * 2)) {
-        m_robotContainer.ledStrip.setStripRGB(255, 0, 0);
-      } else {
-        m_robotContainer.ledStrip.turnOff();
-      }
-    }/* else {
+    // long currentTimeMillis = System.currentTimeMillis();
+    // double secondsDiff = ((double)currentTimeMillis - (double)teleopStartTime) / 1000;
+    // if (secondsDiff < 75) {
+    //   m_robotContainer.ledStrip.setStripRGB(0, 255, 0);
+    // } else if (secondsDiff < 105) {
+    //   m_robotContainer.ledStrip.setStripRGB(255, 64, 0);
+    // } else if (secondsDiff < 120) {
+    //   m_robotContainer.ledStrip.setStripRGB(255, 0, 0);
+    // } else/* if (secondsDiff < 135) */{
+    //   if (Math.round(secondsDiff * 2) == Math.floor(secondsDiff * 2)) {
+    //     m_robotContainer.ledStrip.setStripRGB(255, 0, 0);
+    //   } else {
+    //     m_robotContainer.ledStrip.turnOff();
+    //   }
+    // }
+    /* else {
       for (int i = 0; i < 4; i++) {
         if (i % 2 == 0) {
           m_robotContainer.ledStrip.setRGB(i, 255, 0, 255);

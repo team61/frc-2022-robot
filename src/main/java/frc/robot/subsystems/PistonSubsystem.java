@@ -48,52 +48,34 @@ public class PistonSubsystem extends SubsystemBase {
   public void extend() {
     if (stopped) return;
 
-    //pistonSolenoid1.set(true);
-    //pistonSolenoid2.set(false);
     pistonSolenoid.set(Value.kForward);
-
     direction = UP;
   }
 
   public void retract() {
     if (stopped) return;
 
-    //pistonSolenoid1.set(false);
-    //pistonSolenoid2.set(true);
     pistonSolenoid.set(Value.kReverse);
-    
     direction = DOWN;
   }
 
   private void stopDown() {
-    //downStopper1.set(false);
-    //downStopper2.set(true);
     downStopper.set(Value.kForward);
-
     stopped = true;
   }
 
   private void releaseDown() {
-    //downStopper1.set(true);
-    //downStopper2.set(false);
     downStopper.set(Value.kReverse);
-
     stopped = false;
   }
 
   private void stopUp() {
-    //upStopper1.set(false);
-    //upStopper2.set(true);
     upStopper.set(Value.kForward);
-
     stopped = true;
   }
 
   private void releaseUp() {
-    //upStopper1.set(true);
-    //upStopper2.set(false);
     upStopper.set(Value.kReverse);
-
     stopped = false;
   }
 
