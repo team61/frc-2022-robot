@@ -22,7 +22,7 @@ public class LimelightCommand extends CommandBase {
   private boolean finished = false;
 
   private double limelightMountAngleDegrees = 20;
-  private double limelightLensHeightInches = 34;
+  private double limelightLensHeightInches = 31;
   private double goalHeightInches = 104;
 
   /**
@@ -67,9 +67,9 @@ public class LimelightCommand extends CommandBase {
         
       double speed = 0.015 * horizontalOffset;
       if (horizontalOffset < -3) {
-        driveTrain.drive(speed, -speed);
-      } else if (horizontalOffset > 3) {
         driveTrain.drive(-speed, speed);
+      } else if (horizontalOffset > 3) {
+        driveTrain.drive(speed, -speed);
       }
 
     } else {

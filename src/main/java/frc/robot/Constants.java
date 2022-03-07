@@ -28,7 +28,7 @@ public final class Constants {
 
     public static final double INTAKE_1_SPEED = 1.0;
     public static final double INTAKE_2_SPEED = 0.4;
-    public static final double SHOOTER_SPEED = 1.0;
+    public static final double SHOOTER_SPEED = 0.82;
 
     public static final int LEDStripPort = 0;
     public static final int LEDStripLength = 68;
