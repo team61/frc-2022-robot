@@ -150,7 +150,6 @@ public class Robot extends TimedRobot {
     m_robotContainer.driveTrain.stop();
     m_robotContainer.intake.stop();
     m_robotContainer.shooter.stop();
-    m_robotContainer.pistonAdjuster.set(Value.kForward);
 
     teleopStartTime = System.currentTimeMillis();
   }

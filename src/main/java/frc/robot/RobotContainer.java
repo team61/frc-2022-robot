@@ -14,9 +14,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.robot.commands.AutonomousCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.LimelightCommand;
@@ -98,7 +100,7 @@ public class RobotContainer {
     joystick2.btn_2.whenPressed(new SlowdownCommand(SLOW))
                    .whenReleased(new SlowdownCommand(RESET));
     
-    joystick3.btn_1.whenPressed(() -> { pistonAdjuster.toggle(); });
+    joystick3.btn_1.whenPressed(new ClimbCommand(piston1, pistonAdjuster));
     joystick3.btn_2.whenPressed(new IntakeCommand(intake, OUT))
                    .whenReleased(new IntakeCommand(intake, STOP));
     joystick3.btn_7.whileHeld(() -> { shooter.setSpeed(SHOOTER_SPEED); })
@@ -119,7 +121,13 @@ public class RobotContainer {
     // joystick3.btn_5.whenPressed(new PistonCommand(piston2, UP));
     // joystick3.btn_6.whenPressed(new PistonCommand(piston2, DOWN));
 
-    joystick4.btn_1.whenPressed(() -> { pistonAdjuster.toggle(); });
+    joystick4.btn_1.whenPressed(() -> {
+      if (pistonAdjuster.get() == Value.kOff) {
+        pistonAdjuster.set(Value.kReverse);
+      } else {
+        pistonAdjuster.toggle();
+      }
+    });
     joystick4.btn_2.whenPressed(() -> { System.out.println(RECORDING_OUTPUT); });
     joystick4.btn_3.whenPressed(new PistonCommand(piston1, STOP));
     joystick4.btn_4.whenPressed(new PistonCommand(piston1, STOP));
