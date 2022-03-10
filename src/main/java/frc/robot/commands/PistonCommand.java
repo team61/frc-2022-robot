@@ -54,9 +54,9 @@ public class PistonCommand extends CommandBase {
 
     if (!PNEUMATICS_RECORDING.equals("")) {
       long timeSincePneumaticInput = System.currentTimeMillis() - LAST_PNEUMATIC_INPUT_TIME;
-      LAST_PNEUMATIC_INPUT_TIME = System.currentTimeMillis();
-      PNEUMATICS_RECORDING += "Thread.sleep(" + timeSincePneumaticInput + ");\n";
+      PNEUMATICS_RECORDING += " Thread.sleep(" + timeSincePneumaticInput + ");\n";
     }
+    LAST_PNEUMATIC_INPUT_TIME = System.currentTimeMillis();
     PNEUMATICS_RECORDING += codeToSave;
 
     end(false);
