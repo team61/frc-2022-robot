@@ -4,28 +4,23 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.PistonSubsystem;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 import static frc.robot.Globals.*;
-import static frc.robot.Constants.*;
 
-/** An example command that uses an example subsystem. */
-public class PistonCommand extends CommandBase {
+public class AdjustPistonCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final PistonSubsystem m_subsystem;
-  private final String direction;
+  private final DoubleSolenoid pistonAdjuster;
   private boolean finished = false;
 
   /**
-   * Creates a new PistonCommand.
+   * Creates a new AdjustPistonCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public PistonCommand(PistonSubsystem subsystem, String dir) {
-    m_subsystem = subsystem;
-    direction = dir;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+  public AdjustPistonCommand(DoubleSolenoid solenoid) {
+    pistonAdjuster = solenoid;
   }
 
   // Called when the command is initially scheduled.
@@ -37,19 +32,15 @@ public class PistonCommand extends CommandBase {
   public void execute() {
     String codeToSave = "";
 
-    if (direction == STOP) {
-      m_subsystem.stop();
-      codeToSave = "piston.stop();\n";
-    } else if (direction == UP) {
-      m_subsystem.release();
-      m_subsystem.extend();
-      codeToSave = "piston.extend();\n";
-      codeToSave = "piston.release();\n";
+    if (pistonAdjuster.get() == kOff) {
+      pistonAdjuster.set(kReverse);
+      codeToSave = "pistonAdjuster.set(kReverse);\n";
+    } else if (pistonAdjuster.get() == kReverse) {
+      pistonAdjuster.set(kForward);
+      codeToSave = "pistonAdjuster.set(kForward);\n";
     } else {
-      m_subsystem.release();
-      m_subsystem.retract();
-      codeToSave = "piston.release();\n";
-      codeToSave = "piston.retract();\n";
+      pistonAdjuster.set(kReverse);
+      codeToSave = "pistonAdjuster.set(kReverse);\n";
     }
 
     if (!PNEUMATICS_RECORDING.equals("")) {
@@ -57,7 +48,7 @@ public class PistonCommand extends CommandBase {
       LAST_PNEUMATIC_INPUT_TIME = System.currentTimeMillis();
       PNEUMATICS_RECORDING += "Thread.sleep(" + timeSincePneumaticInput + ");\n";
     }
-    PNEUMATICS_RECORDING += codeToSave;
+    PNEUMATICS_RECORDING += codeToSave; 
 
     end(false);
   }
