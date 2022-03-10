@@ -43,13 +43,13 @@ public class PistonCommand extends CommandBase {
     } else if (direction == UP) {
       m_subsystem.release();
       m_subsystem.extend();
-      codeToSave = "piston.extend();\n";
       codeToSave = "piston.release();\n";
+      codeToSave += "piston.extend();\n";
     } else {
       m_subsystem.release();
       m_subsystem.retract();
       codeToSave = "piston.release();\n";
-      codeToSave = "piston.retract();\n";
+      codeToSave += "piston.retract();\n";
     }
 
     if (!PNEUMATICS_RECORDING.equals("")) {
