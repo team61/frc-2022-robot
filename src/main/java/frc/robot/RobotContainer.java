@@ -123,11 +123,12 @@ public class RobotContainer {
     // joystick3.btn_6.whenPressed(new PistonCommand(piston2, DOWN));
 
     joystick4.btn_1.whenPressed(new AdjustPistonCommand(pistonAdjuster));
-    joystick4.btn_2.whenPressed(() -> { System.out.println(PNEUMATICS_RECORDING); });
     joystick4.btn_3.whenPressed(new PistonCommand(piston1, STOP));
     joystick4.btn_4.whenPressed(new PistonCommand(piston1, STOP));
     joystick4.btn_5.whenPressed(new PistonCommand(piston1, UP));
     joystick4.btn_6.whenPressed(new PistonCommand(piston1, DOWN));
+    joystick4.btn_11.whenPressed(() -> { System.out.println(RECORDING_OUTPUT); });
+    joystick4.btn_12.whenPressed(() -> { System.out.println(PNEUMATICS_RECORDING); });
   }
   
   public Command getLimelightCommand() {

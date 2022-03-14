@@ -13,7 +13,7 @@ import static frc.robot.Constants.*;
 /** An example command that uses an example subsystem. */
 public class ClimbCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final PistonSubsystem piston;
+  private final PistonSubsystem piston1;
   private final DoubleSolenoid pistonAdjuster;
   private boolean finished = false;
 
@@ -24,13 +24,13 @@ public class ClimbCommand extends CommandBase {
   /**
    * Creates a new DriveCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param subsystem1 The subsystem used by this command.
    */
-  public ClimbCommand(PistonSubsystem subsystem, DoubleSolenoid solenoid) {
-    piston = subsystem;
+  public ClimbCommand(PistonSubsystem subsystem1, DoubleSolenoid solenoid) {
+    piston1 = subsystem1;
     pistonAdjuster = solenoid;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(subsystem1);
   }
 
   // Called when the command is initially scheduled.
@@ -56,29 +56,29 @@ public class ClimbCommand extends CommandBase {
       try {
         pistonAdjuster.set(kReverse);
         Thread.sleep(ADJUSTER_TIME);
-        piston.extend();
+        piston1.extend();
         Thread.sleep(PISTON_TIME);
         pistonAdjuster.set(kForward);
         Thread.sleep(ADJUSTER_TIME);
-        piston.retract();
+        piston1.retract();
         Thread.sleep(PISTON_TIME);
-        piston.extend();
+        piston1.extend();
         Thread.sleep(PARTIAL_TIME);
         pistonAdjuster.set(kReverse);
         Thread.sleep(ADJUSTER_TIME);
         pistonAdjuster.set(kForward);
         Thread.sleep(ADJUSTER_TIME);
-        piston.retract();
+        piston1.retract();
         Thread.sleep(PISTON_TIME);
-        piston.extend();
+        piston1.extend();
         Thread.sleep(PARTIAL_TIME);
         pistonAdjuster.set(kReverse);
         Thread.sleep(ADJUSTER_TIME);
         pistonAdjuster.set(kForward);
         Thread.sleep(ADJUSTER_TIME);
-        piston.retract();
+        piston1.retract();
         Thread.sleep(PARTIAL_TIME);
-        piston.stop();
+        piston1.stop();
       } catch (Exception e) { System.err.println(e); }
     }).start();
 

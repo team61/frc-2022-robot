@@ -14,6 +14,7 @@ public class PistonCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final PistonSubsystem m_subsystem;
   private final String direction;
+  private String idx;
   private boolean finished = false;
 
   /**
@@ -24,6 +25,12 @@ public class PistonCommand extends CommandBase {
   public PistonCommand(PistonSubsystem subsystem, String dir) {
     m_subsystem = subsystem;
     direction = dir;
+
+    if (m_subsystem.pistonSolenoid.getFwdChannel() <= 1) {
+      idx = "1";
+    } else {
+      idx = "2";
+    }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -39,17 +46,17 @@ public class PistonCommand extends CommandBase {
 
     if (direction == STOP) {
       m_subsystem.stop();
-      codeToSave = "piston.stop();\n";
+      codeToSave = String.format("piston%s.stop();\n", idx);
     } else if (direction == UP) {
       m_subsystem.release();
       m_subsystem.extend();
-      codeToSave = "piston.release();\n";
-      codeToSave += "piston.extend();\n";
+      codeToSave = String.format("piston%s.release();\n", idx);
+      codeToSave += String.format("piston%s.extend();\n", idx);
     } else {
       m_subsystem.release();
       m_subsystem.retract();
-      codeToSave = "piston.release();\n";
-      codeToSave += "piston.retract();\n";
+      codeToSave = String.format("piston%s.release();\n", idx);
+      codeToSave += String.format("piston%s.retract();\n", idx);
     }
 
     if (!PNEUMATICS_RECORDING.equals("")) {
