@@ -53,7 +53,7 @@ public class RobotContainer {
   private final LogitechJoystick joystick4 = new LogitechJoystick(joystickport4);
 
   public final PowerDistribution pdp = new PowerDistribution(10, ModuleType.kRev);
-  public final PneumaticHub m_pneumaticHub = new PneumaticHub(11);
+  public final PneumaticHub m_pneumaticHub = new PneumaticHub(15);
   // private final CompressorSubsystem m_compressorSubsystem = new CompressorSubsystem();
   public final PistonSubsystem piston1 = new PistonSubsystem(m_pneumaticHub, 0, 1, 2, 3, 4, 5);
   // public final PistonSubsystem piston2 = new PistonSubsystem(m_pneumaticHub, 15, 14, 13, 12, 11, 10);

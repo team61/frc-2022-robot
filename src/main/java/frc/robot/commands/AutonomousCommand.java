@@ -8,6 +8,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import static frc.robot.Constants.*;
 
 /** An example command that uses an example subsystem. */
 public class AutonomousCommand extends CommandBase {
@@ -36,8 +37,6 @@ public class AutonomousCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //m_subsystem.driveTime(0.2, 0.2, 2);
-    //m_subsystem.stop();
     playbackReady = true;
     startedScriptedAutonomous = false;
   }
@@ -52,15 +51,15 @@ public class AutonomousCommand extends CommandBase {
       speedIndex++;
     } else if (!startedScriptedAutonomous) {
       startedScriptedAutonomous = true;
-      end(false);
       // runScriptedAutonomous();
+      end(false);
     }
   }
 
   private void runScriptedAutonomous() {
-    new DriveTimeCommand(drivetrain, 0.2, 0.2, 0.5).andThen(
-    new DriveTimeCommand(drivetrain, -0.6, -0.6, 0.5)).andThen(
-    new DriveTimeCommand(drivetrain, 0.0, 0.0, 0.5))
+    new DriveTimeCommand(drivetrain, 0.5, 0.5, 1.0).andThen(
+    new DriveTimeCommand(drivetrain, -0.6, 0.6, 1.0)).andThen(
+    new ShootTimeCommand(shooter, OUT, 4.5))
     .schedule();
   }
 
