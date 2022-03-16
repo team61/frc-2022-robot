@@ -54,17 +54,16 @@ public class LimelightCommand extends CommandBase {
       double verticalOffset = ty.getDouble(0.0);
       double areaPercentage = ta.getDouble(0.0);
 
-      String x = String.format("%.4f", horizontalOffset);
-      String y = String.format("%.4f", verticalOffset);
-      String area = String.format("%.4f", areaPercentage);
-
       double angleToGoalDegrees = limelightMountAngleDegrees + verticalOffset;
       double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
       double distanceToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
       SHOOTER_VOLTS = 0.00008 * Math.pow(distanceToGoalInches + 8, 2) + 8;
       if (SHOOTER_VOLTS < 7) SHOOTER_VOLTS = 7;
       if (SHOOTER_VOLTS > 13) SHOOTER_VOLTS = 13;
-
+      
+      // String x = String.format("%.4f", horizontalOffset);
+      // String y = String.format("%.4f", verticalOffset);
+      // String area = String.format("%.4f", areaPercentage);
       // System.out.println("(" + x + ", " + y + "), " + area + "%           " + distanceToGoalInches + "in");
 
       if (!joystick.btn_2.get()) return;

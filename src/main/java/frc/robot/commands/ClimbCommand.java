@@ -8,7 +8,6 @@ import frc.robot.subsystems.PistonSubsystem;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
-import static frc.robot.Constants.*;
 
 /** An example command that uses an example subsystem. */
 public class ClimbCommand extends CommandBase {

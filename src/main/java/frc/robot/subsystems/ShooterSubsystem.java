@@ -5,8 +5,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import static frc.robot.Constants.*;
 import static frc.robot.Globals.*;
 
 public class ShooterSubsystem extends SubsystemBase {

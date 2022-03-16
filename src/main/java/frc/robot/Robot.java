@@ -4,22 +4,16 @@
 
 package frc.robot;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Playback;
 import frc.robot.commands.AutonomousCommand;
-import frc.robot.commands.DriveCommand;
-import frc.robot.commands.LimelightCommand;
 import lib.components.LogitechJoystick;
 import static frc.robot.Globals.*;
 
@@ -65,13 +59,13 @@ public class Robot extends TimedRobot {
     m_robotContainer.piston1.stop();
     m_robotContainer.piston2.stop();
 
-    // addPeriodic(() -> {
-    //   if (!inAutonomous) return;
+    addPeriodic(() -> {
+      if (!inAutonomous) return;
 
-    //   for (int i = 0; i < 6; i++) {
-    //     m_robotContainer.ledStrip.setRGB(i, colors[i][0], colors[i][1], colors[i][2]);
-    //   }
-    // }, 0.1);
+      for (int i = 0; i < 6; i++) {
+        m_robotContainer.ledStrip.setRGB(i, colors[i][0], colors[i][1], colors[i][2]);
+      }
+    }, 0.1);
   }
 
   /**
