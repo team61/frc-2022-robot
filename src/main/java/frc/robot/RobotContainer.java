@@ -49,14 +49,14 @@ public class RobotContainer {
 
   public final LogitechJoystick joystick1 = new LogitechJoystick(joystickport1);
   public final LogitechJoystick joystick2 = new LogitechJoystick(joystickport2);
-  private final LogitechJoystick joystick3 = new LogitechJoystick(joystickport3);
-  private final LogitechJoystick joystick4 = new LogitechJoystick(joystickport4);
+  public final LogitechJoystick joystick3 = new LogitechJoystick(joystickport3);
+  public final LogitechJoystick joystick4 = new LogitechJoystick(joystickport4);
 
   public final PowerDistribution pdp = new PowerDistribution(10, ModuleType.kRev);
   public final PneumaticHub m_pneumaticHub = new PneumaticHub(15);
   // private final CompressorSubsystem m_compressorSubsystem = new CompressorSubsystem();
   public final PistonSubsystem piston1 = new PistonSubsystem(m_pneumaticHub, 0, 1, 2, 3, 4, 5);
-  // public final PistonSubsystem piston2 = new PistonSubsystem(m_pneumaticHub, 15, 14, 13, 12, 11, 10);
+  public final PistonSubsystem piston2 = new PistonSubsystem(m_pneumaticHub, 15, 14, 12, 13, 10, 11);
   public final DoubleSolenoid pistonAdjuster = m_pneumaticHub.makeDoubleSolenoid(8, 9);
 
   private final DoubleMotors driveLeft = new DoubleMotors(18, 19, true);
@@ -72,7 +72,7 @@ public class RobotContainer {
   
   private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   private final LimelightCommand m_limelightCommand = new LimelightCommand(table, joystick1, driveTrain); 
-  private final AutonomousCommand m_autoCommand = new AutonomousCommand(driveTrain, intake, shooter);
+  private final AutonomousCommand m_autoCommand = new AutonomousCommand(driveTrain, intake, shooter, m_limelightCommand);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -100,13 +100,21 @@ public class RobotContainer {
                    .whenReleased(new ShootCommand(shooter, STOP));
     joystick2.btn_2.whenPressed(new SlowdownCommand(SLOW))
                    .whenReleased(new SlowdownCommand(RESET));
+    joystick2.btn_7.whenPressed(new ShootCommand(shooter, OUT, 8))
+                   .whenReleased(new ShootCommand(shooter, STOP));
+    joystick2.btn_8.whenPressed(new ShootCommand(shooter, OUT, 5))
+                   .whenReleased(new ShootCommand(shooter, STOP));
+    joystick2.btn_9.whenPressed(new ShootCommand(shooter, OUT))
+                   .whenReleased(new ShootCommand(shooter, STOP));
+    joystick2.btn_11.whenPressed(new ShootCommand(shooter, OUT, 11.5))
+                   .whenReleased(new ShootCommand(shooter, STOP));
     
     joystick3.btn_1.whenPressed(new ClimbCommand(piston1, pistonAdjuster));
     joystick3.btn_2.whenPressed(new IntakeCommand(intake, OUT))
                    .whenReleased(new IntakeCommand(intake, STOP));
-    joystick3.btn_7.whileHeld(() -> { shooter.setSpeed(SHOOTER_SPEED); })
+    joystick3.btn_7.whileHeld(() -> { shooter.setSpeed(SHOOTER_VOLTS); })
                    .whenReleased(() -> { shooter.setSpeed(0.0); });
-    joystick3.btn_8.whileHeld(() -> { shooter.setSpeed(-SHOOTER_SPEED); })
+    joystick3.btn_8.whileHeld(() -> { shooter.setSpeed(-SHOOTER_VOLTS); })
                    .whenReleased(() -> { shooter.setSpeed(0.0); });
     joystick3.btn_9.whileHeld(() -> { intake.setSpeed1(INTAKE_1_SPEED); })
                    .whenReleased(() -> { intake.setSpeed1(0.0); });
@@ -117,10 +125,10 @@ public class RobotContainer {
     joystick3.btn_12.whileHeld(() -> { intake.setSpeed2(-INTAKE_2_SPEED); })
                     .whenReleased(() -> { intake.setSpeed2(0.0); });
     
-    // joystick3.btn_3.whenPressed(new PistonCommand(piston2, STOP));
-    // joystick3.btn_4.whenPressed(new PistonCommand(piston2, STOP));
-    // joystick3.btn_5.whenPressed(new PistonCommand(piston2, UP));
-    // joystick3.btn_6.whenPressed(new PistonCommand(piston2, DOWN));
+    joystick3.btn_3.whenPressed(new PistonCommand(piston2, STOP));
+    joystick3.btn_4.whenPressed(new PistonCommand(piston2, STOP));
+    joystick3.btn_5.whenPressed(new PistonCommand(piston2, UP));
+    joystick3.btn_6.whenPressed(new PistonCommand(piston2, DOWN));
 
     joystick4.btn_1.whenPressed(new AdjustPistonCommand(pistonAdjuster));
     joystick4.btn_3.whenPressed(new PistonCommand(piston1, STOP));

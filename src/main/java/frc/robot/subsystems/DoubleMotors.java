@@ -5,21 +5,29 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DoubleMotors extends SubsystemBase {
-  public TalonFX motor1;
-  public TalonFX motor2;
+  public WPI_TalonFX motor1;
+  public WPI_TalonFX motor2;
 
   /** Creates a new DoubleMotors. */
   public DoubleMotors(int id1, int id2, boolean invert) {
-    motor1 = new TalonFX(id1);
-    motor2 = new TalonFX(id2);
+    motor1 = new WPI_TalonFX(id1);
+    motor2 = new WPI_TalonFX(id2);
 
     motor1.setInverted(invert);
     motor2.setInverted(invert);
+  }
+
+  public double getVoltage1() {
+    return motor1.getMotorOutputVoltage();
+  }
+
+  public double getVoltage2() {
+    return motor2.getMotorOutputVoltage();
   }
 
   public double getSpeed1() {
@@ -41,6 +49,19 @@ public class DoubleMotors extends SubsystemBase {
   public void setSpeed(double s) {
     setSpeed1(s);
     setSpeed2(s);
+  }
+
+  public void setVolts(double v) {
+    setVolts1(v);
+    setVolts2(v);
+  }
+
+  public void setVolts1(double v) {
+    motor1.setVoltage(v);
+  }
+
+  public void setVolts2(double v) {
+    motor2.setVoltage(v);
   }
 
   @Override

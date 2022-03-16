@@ -4,8 +4,14 @@
 
 package frc.robot;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Playback;
 import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.LimelightCommand;
 import lib.components.LogitechJoystick;
 import static frc.robot.Globals.*;
 
@@ -55,6 +62,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     m_limelightCommand = m_robotContainer.getLimelightCommand();
+    m_robotContainer.piston1.stop();
+    m_robotContainer.piston2.stop();
 
     // addPeriodic(() -> {
     //   if (!inAutonomous) return;
@@ -80,9 +89,9 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    if (m_limelightCommand != null) {
-      m_limelightCommand.schedule();
-    }
+    // if (m_limelightCommand != null) {
+    //   m_limelightCommand.schedule();
+    // }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -99,7 +108,7 @@ public class Robot extends TimedRobot {
 
     String output = "speeds = new double[][]{";
     for (double[] speed : speeds) {
-      output += "new double[]{" + speed[0] + "," + speed[1] + "," + speed[2] + "," + speed[3] + "," + speed[4] + "," + speed[5] + "," + speed[6] + "},";
+      output += "new double[]{" + speed[0] + "," + speed[1] + "," + speed[2] + "," + speed[3] + "," + speed[4] + "," + speed[5] + "," + speed[6] + "," + speed[7] + "},";
     }
     output += "};";
     RECORDING_OUTPUT = output;
@@ -109,9 +118,22 @@ public class Robot extends TimedRobot {
       Playback.speeds[i] = speeds.get(i);
     }
 
-    System.out.println("\n");
-    System.out.print(output);
-    System.out.println("\n");
+    final String data = output;
+    new Thread(() -> {
+      try {
+        File file = new File("/home/lvuser/recording.txt"); 
+        file.createNewFile(); 
+        FileOutputStream oFile = new FileOutputStream(file, false); 
+
+        String content = data;
+        oFile.write(content.getBytes()); 
+        oFile.flush(); 
+        oFile.close(); 
+        System.out.println("Saved recording");
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }).run();
   }
 
   @Override
@@ -129,7 +151,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_robotContainer.driveTrain.stop();
-    new AutonomousCommand(m_robotContainer.driveTrain, m_robotContainer.intake, m_robotContainer.shooter).schedule();
+    new AutonomousCommand(m_robotContainer.driveTrain, m_robotContainer.intake, m_robotContainer.shooter, m_limelightCommand).schedule();
     inAutonomous = true;
   }
 
@@ -150,13 +172,24 @@ public class Robot extends TimedRobot {
     m_robotContainer.driveTrain.stop();
     m_robotContainer.intake.stop();
     m_robotContainer.shooter.stop();
+    m_robotContainer.piston1.stop();
+    m_robotContainer.piston2.stop();
 
     teleopStartTime = System.currentTimeMillis();
+
+    if (m_robotContainer.joystick4.btn_7.get()) {
+      speeds.clear();
+      recording = true;
+    }
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    if (m_limelightCommand != null) {
+      m_limelightCommand.schedule();
+    }
+
     LogitechJoystick joystick1 = m_robotContainer.joystick1;
     LogitechJoystick joystick2 = m_robotContainer.joystick2;
 
@@ -164,25 +197,25 @@ public class Robot extends TimedRobot {
     double speedPercentage1 = joystick1.getYAxis() * Math.abs(joystick1.getYAxis());
     double speedPercentage2 = joystick2.getYAxis() * Math.abs(joystick2.getYAxis());
 
-    if (m_robotContainer.joystick1.btn_2.get()) return;
-    m_robotContainer.driveTrain.drive(speedPercentage1, speedPercentage2);
+    if (!m_robotContainer.joystick1.btn_2.get()) {
+      m_robotContainer.driveTrain.drive(speedPercentage1, speedPercentage2);
+    }
 
-    // long currentTimeMillis = System.currentTimeMillis();
-    // double secondsDiff = ((double)currentTimeMillis - (double)teleopStartTime) / 1000;
-    // if (secondsDiff < 75) {
-    //   m_robotContainer.ledStrip.setStripRGB(0, 255, 0);
-    // } else if (secondsDiff < 105) {
-    //   m_robotContainer.ledStrip.setStripRGB(255, 64, 0);
-    // } else if (secondsDiff < 120) {
-    //   m_robotContainer.ledStrip.setStripRGB(255, 0, 0);
-    // } else/* if (secondsDiff < 135) */{
-    //   if (Math.round(secondsDiff * 2) == Math.floor(secondsDiff * 2)) {
-    //     m_robotContainer.ledStrip.setStripRGB(255, 0, 0);
-    //   } else {
-    //     m_robotContainer.ledStrip.turnOff();
-    //   }
-    // }
-    /* else {
+    long currentTimeMillis = System.currentTimeMillis();
+    double secondsDiff = ((double)currentTimeMillis - (double)teleopStartTime) / 1000;
+    if (secondsDiff < 75) {
+      m_robotContainer.ledStrip.setStripRGB(0, 255, 0);
+    } else if (secondsDiff < 105) {
+      m_robotContainer.ledStrip.setStripRGB(255, 64, 0);
+    } else if (secondsDiff < 120) {
+      m_robotContainer.ledStrip.setStripRGB(255, 0, 0);
+    } else if (secondsDiff < 135) {
+      if (Math.round(secondsDiff * 2) == Math.floor(secondsDiff * 2)) {
+        m_robotContainer.ledStrip.setStripRGB(255, 0, 0);
+      } else {
+        m_robotContainer.ledStrip.turnOff();
+      }
+    } else {
       for (int i = 0; i < 4; i++) {
         if (i % 2 == 0) {
           m_robotContainer.ledStrip.setRGB(i, 255, 0, 255);
@@ -190,12 +223,20 @@ public class Robot extends TimedRobot {
           m_robotContainer.ledStrip.setRGB(i, 255, 128, 0);
         }
       }
-    }*/
+    }
 
     // green until 1 min left
     // orange until 30s left
     // red until 15s left
     // blinking red till end
+
+    speeds.add(new double[] {
+      m_robotContainer.driveTrain.driveLeft.getVoltage1(), m_robotContainer.driveTrain.driveRight.getVoltage2(),
+      m_robotContainer.intake.getVoltage1(), m_robotContainer.intake.getVoltage2(),
+      m_robotContainer.shooter.shooter.getVoltage1(),
+      m_robotContainer.sensor1.isTriggered() ? 1.0 : 0.0, m_robotContainer.sensor2.isTriggered() ? 1.0 : 0.0,
+      joystick1.btn_2.get() ? 1.0 : 0.0
+    });
   }
 
   @Override
@@ -245,7 +286,7 @@ public class Robot extends TimedRobot {
     }
 
     speeds.add(new double[] {
-      speedPercentage1, speedPercentage2,
+      m_robotContainer.driveTrain.driveLeft.getSpeed1(), m_robotContainer.driveTrain.driveRight.getSpeed1(),
       m_robotContainer.intake.getSpeed1(), m_robotContainer.intake.getSpeed2(),
       m_robotContainer.shooter.shooter.getSpeed1(),
       m_robotContainer.sensor1.isTriggered() ? 1.0 : 0.0, m_robotContainer.sensor2.isTriggered() ? 1.0 : 0.0

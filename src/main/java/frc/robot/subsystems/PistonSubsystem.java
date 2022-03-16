@@ -6,8 +6,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 import static frc.robot.Constants.*;
 
 public class PistonSubsystem extends SubsystemBase {
@@ -48,34 +48,34 @@ public class PistonSubsystem extends SubsystemBase {
   public void extend() {
     if (stopped) return;
 
-    pistonSolenoid.set(Value.kForward);
+    pistonSolenoid.set(kForward);
     direction = UP;
   }
 
   public void retract() {
     if (stopped) return;
 
-    pistonSolenoid.set(Value.kReverse);
+    pistonSolenoid.set(kReverse);
     direction = DOWN;
   }
 
   private void stopDown() {
-    downStopper.set(Value.kForward);
+    downStopper.set(kForward);
     stopped = true;
   }
 
   private void releaseDown() {
-    downStopper.set(Value.kReverse);
+    downStopper.set(kReverse);
     stopped = false;
   }
 
   private void stopUp() {
-    upStopper.set(Value.kForward);
+    upStopper.set(kForward);
     stopped = true;
   }
 
   private void releaseUp() {
-    upStopper.set(Value.kReverse);
+    upStopper.set(kReverse);
     stopped = false;
   }
 

@@ -30,6 +30,14 @@ public class IntakeSubsystem extends SubsystemBase {
     intake.setSpeed(0.0);
   }
 
+  public double getVoltage1() {
+    return intake.getVoltage1();
+  }
+
+  public double getVoltage2() {
+    return intake.getVoltage2();
+  }
+
   public double getSpeed1() {
     return intake.getSpeed1();
   }
@@ -48,6 +56,18 @@ public class IntakeSubsystem extends SubsystemBase {
     if (value == getSpeed2()) return;
 
     intake.setSpeed2(value);
+  }
+
+  public void setVolts1(double volts) {
+    if (volts == getVoltage1()) return;
+
+    intake.setVolts1(volts);
+  }
+
+  public void setVolts2(double volts) {
+    if (volts == getVoltage2()) return;
+
+    intake.setVolts2(volts);
   }
 
   public void intake() {

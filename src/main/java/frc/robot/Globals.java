@@ -7,4 +7,5 @@ public final class Globals {
   public static String RECORDING_OUTPUT = "";
   public static long LAST_PNEUMATIC_INPUT_TIME = 0L;
   public static String PNEUMATICS_RECORDING = "";
+  public static double SHOOTER_VOLTS = 9.0;
 }

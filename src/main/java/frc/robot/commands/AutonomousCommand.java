@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.robot.Constants.*;
 
@@ -16,6 +17,7 @@ public class AutonomousCommand extends CommandBase {
   private final DriveTrain drivetrain;
   private final IntakeSubsystem intake;
   private final ShooterSubsystem shooter;
+  private final Command limelightCommand;
   private int speedIndex = 0;
   private boolean playbackReady = false;
   private boolean startedScriptedAutonomous = false;
@@ -26,10 +28,11 @@ public class AutonomousCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AutonomousCommand(DriveTrain d, IntakeSubsystem i, ShooterSubsystem s) {
+  public AutonomousCommand(DriveTrain d, IntakeSubsystem i, ShooterSubsystem s, Command lc) {
     drivetrain = d;
     intake = i;
     shooter = s;
+    limelightCommand = lc;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(d, i, s);
   }
@@ -45,7 +48,7 @@ public class AutonomousCommand extends CommandBase {
   @Override
   public void execute() {
     if (!playbackReady) return;
-    boolean res = Playback.run(drivetrain, intake, shooter, speedIndex);
+    boolean res = Playback.run(drivetrain, intake, shooter, speedIndex, limelightCommand);
 
     if (res) {
       speedIndex++;

@@ -25,9 +25,27 @@ public class ShooterSubsystem extends SubsystemBase {
     shooter.setSpeed(value);
   }
 
+  public void setVolts(double volts) {
+    shooter.setVolts(volts);
+  }
+
   public void shoot() {
     IS_SHOOTING = true;
-    setSpeed(SHOOTER_SPEED);
+    
+    setVolts(SHOOTER_VOLTS);
+    
+    new Thread(() -> {
+      try {
+          Thread.sleep(1000);
+          intakeSubsystem.intake(true);
+      } catch (Exception e) { System.err.println(e); }
+    }).start();
+  }
+
+  public void shoot(double volts) {
+    IS_SHOOTING = true;
+    
+    setVolts(volts);
     
     new Thread(() -> {
       try {

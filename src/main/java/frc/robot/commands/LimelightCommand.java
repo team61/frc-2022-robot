@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 import lib.components.LogitechJoystick;
+import static frc.robot.Globals.*;
 
 /** An example command that uses an example subsystem. */
 public class LimelightCommand extends CommandBase {
@@ -22,7 +23,7 @@ public class LimelightCommand extends CommandBase {
   private boolean finished = false;
 
   private double limelightMountAngleDegrees = 20;
-  private double limelightLensHeightInches = 31;
+  private double limelightLensHeightInches = 30.5;
   private double goalHeightInches = 104;
 
   /**
@@ -60,16 +61,19 @@ public class LimelightCommand extends CommandBase {
       double angleToGoalDegrees = limelightMountAngleDegrees + verticalOffset;
       double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
       double distanceToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+      SHOOTER_VOLTS = 0.00008 * Math.pow(distanceToGoalInches + 8, 2) + 8;
+      if (SHOOTER_VOLTS < 7) SHOOTER_VOLTS = 7;
+      if (SHOOTER_VOLTS > 13) SHOOTER_VOLTS = 13;
 
       // System.out.println("(" + x + ", " + y + "), " + area + "%           " + distanceToGoalInches + "in");
 
       if (!joystick.btn_2.get()) return;
         
-      double speed = 0.015 * horizontalOffset;
-      if (horizontalOffset < -3) {
-        driveTrain.drive(-speed, speed);
-      } else if (horizontalOffset > 3) {
+      double speed = 0.05 * Math.sqrt(Math.abs(horizontalOffset));
+      if (horizontalOffset < -0.2) {
         driveTrain.drive(speed, -speed);
+      } else if (horizontalOffset > 0.1) {
+        driveTrain.drive(-speed, speed);
       }
 
     } else {

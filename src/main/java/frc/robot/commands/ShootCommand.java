@@ -13,6 +13,7 @@ public class ShootCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ShooterSubsystem m_subsystem;
   private final String direction;
+  private double overrideVoltage = -1;
   private boolean finished = false;
 
   /**
@@ -27,6 +28,14 @@ public class ShootCommand extends CommandBase {
     addRequirements(subsystem);
   }
 
+  public ShootCommand(ShooterSubsystem subsystem, String dir, double volts) {
+    m_subsystem = subsystem;
+    direction = dir;
+    overrideVoltage = volts;
+
+    addRequirements(subsystem);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -35,7 +44,11 @@ public class ShootCommand extends CommandBase {
   @Override
   public void execute() {
     if (direction == OUT) {
-      m_subsystem.shoot();
+      if (overrideVoltage == -1) {
+        m_subsystem.shoot();
+      } else {
+        m_subsystem.shoot(overrideVoltage);
+      }
     } else if (direction == STOP) {
       m_subsystem.stop();
     }
