@@ -7,8 +7,11 @@ package frc.robot.commands;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import static frc.robot.Globals.*;
 import static frc.robot.Constants.*;
 
 /** An example command that uses an example subsystem. */
@@ -48,21 +51,29 @@ public class AutonomousCommand extends CommandBase {
   @Override
   public void execute() {
     if (!playbackReady) return;
-    boolean res = Playback.run(drivetrain, intake, shooter, speedIndex, limelightCommand);
+    // boolean res = Playback.run(drivetrain, intake, shooter, speedIndex, limelightCommand);
+    boolean res = false;
 
     if (res) {
       speedIndex++;
     } else if (!startedScriptedAutonomous) {
       startedScriptedAutonomous = true;
-      // runScriptedAutonomous();
+      runScriptedAutonomous();
       end(false);
     }
   }
 
   private void runScriptedAutonomous() {
-    new DriveTimeCommand(drivetrain, 0.5, 0.5, 1.0).andThen(
-    new DriveTimeCommand(drivetrain, -0.6, 0.6, 1.0)).andThen(
-    new ShootTimeCommand(shooter, OUT, 4.5))
+    new IntakeCommand(intake, IN).andThen(
+    new DriveTimeCommand(drivetrain, -6.0, -6.0, 1.0)).andThen(
+    new DriveTimeCommand(drivetrain, -8.0, 8.0, 0.65)).andThen(
+    new DriveCommand(drivetrain, 0.0, 0.0)).andThen(
+    new WaitCommand(0.5)).andThen(
+    () -> SHOULD_USE_LIMELIGHT = true).andThen(
+    new WaitCommand(1)).andThen(
+    () -> SHOULD_USE_LIMELIGHT = false).andThen(
+    new ShootTimeCommand(shooter, OUT, 5.0)).andThen(
+    new ShootCommand(shooter, STOP))
     .schedule();
   }
 

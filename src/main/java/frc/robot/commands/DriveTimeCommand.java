@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DriveTimeCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveTrain m_subsystem;
-  private final double lSpeed;
-  private final double rSpeed;
+  private final double lVolts;
+  private final double rVolts;
   private final double delay;
   private boolean finished = false;
 
@@ -22,10 +22,10 @@ public class DriveTimeCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveTimeCommand(DriveTrain subsystem, double s1, double s2, double time) {
+  public DriveTimeCommand(DriveTrain subsystem, double v1, double v2, double time) {
     m_subsystem = subsystem;
-    lSpeed = s1;
-    rSpeed = s2;
+    lVolts = v1;
+    rVolts = v2;
     delay = time;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -38,7 +38,7 @@ public class DriveTimeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.drive(lSpeed, rSpeed);
+    m_subsystem.driveVolts(lVolts, rVolts);
 
     Timer.delay(delay);
     end(false);

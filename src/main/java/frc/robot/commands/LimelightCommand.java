@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 import lib.components.LogitechJoystick;
@@ -66,7 +67,7 @@ public class LimelightCommand extends CommandBase {
       // String area = String.format("%.4f", areaPercentage);
       // System.out.println("(" + x + ", " + y + "), " + area + "%           " + distanceToGoalInches + "in");
 
-      if (!joystick.btn_2.get()) return;
+      if (!(joystick.btn_2.get() || SHOULD_USE_LIMELIGHT)) return;
         
       double speed = 0.05 * Math.sqrt(Math.abs(horizontalOffset));
       if (horizontalOffset < -0.2) {
@@ -74,7 +75,6 @@ public class LimelightCommand extends CommandBase {
       } else if (horizontalOffset > 0.1) {
         driveTrain.drive(-speed, speed);
       }
-
     } else {
       // System.out.println("No target");
     }
