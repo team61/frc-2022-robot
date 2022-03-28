@@ -27,13 +27,12 @@ import static frc.robot.Constants.*;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private Command m_limelightCommand;
+  public Command m_limelightCommand;
   private RobotContainer m_robotContainer;
 
   private ArrayList<double[]> speeds = new ArrayList<>();
   private boolean recording = false;
   private long teleopStartTime = 0;
-  private boolean inAutonomous = false;
   int[][] colors = {
     new int[] {255, 0, 0},
     new int[] {255, 64, 0},
@@ -65,7 +64,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.piston2.stop();
 
     addPeriodic(() -> {
-      if (!inAutonomous) return;
+      if (!IN_AUTONOMOUS) return;
 
       for (int i = 0; i < LEDStripLength; i++) {
         int index = i % colors.length;
@@ -102,7 +101,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.intake.stop();
     m_robotContainer.shooter.stop();
 
-    if (inAutonomous) inAutonomous = false;
+    if (IN_AUTONOMOUS) IN_AUTONOMOUS = false;
     if (!recording) return;
     recording = false;
 
@@ -138,21 +137,24 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    int total = 4;
+    int total = 2;
     for (int i = 0; i < total; i++) {
-      int index = (int)Math.floor(i / 2) % 2;
+      int index = i % 2;
       m_robotContainer.ledStrip.setRGB(i, bvt[index][0], bvt[index][1], bvt[index][2]);
-      index += total / 2;
-      m_robotContainer.ledStrip.setRGB(i, bvt[index][0], bvt[index][1], bvt[index][2]);
+      m_robotContainer.ledStrip.setRGB(i + 2, bvt[index][0], bvt[index][1], bvt[index][2]);
+      m_robotContainer.ledStrip.setRGB(i + 4, bvt[index][0], bvt[index][1], bvt[index][2]);
     }
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    IN_AUTONOMOUS = true;
+    for (int i = 0; i < LEDStripLength; i++) {
+      m_robotContainer.ledStrip.setRGB(i, 0, 0, 0);
+    }
     m_robotContainer.driveTrain.stop();
     new AutonomousCommand(m_robotContainer.driveTrain, m_robotContainer.intake, m_robotContainer.shooter, m_limelightCommand).schedule();
-    inAutonomous = true;
   }
 
   /** This function is called periodically during autonomous. */
@@ -185,6 +187,8 @@ public class Robot extends TimedRobot {
       speeds.clear();
       recording = true;
     }
+
+    SHOULD_USE_LIMELIGHT = false;
   }
 
   /** This function is called periodically during operator control. */

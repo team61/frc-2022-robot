@@ -48,6 +48,8 @@ public class LimelightCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (LIMELIGHT_OVERRIDE) return;
+
     boolean valid = tv.getDouble(0.0) == 1.0 ? true : false;
 
     if (valid) {
@@ -58,7 +60,7 @@ public class LimelightCommand extends CommandBase {
       double angleToGoalDegrees = limelightMountAngleDegrees + verticalOffset;
       double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
       double distanceToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-      SHOOTER_VOLTS = 0.00008 * Math.pow(distanceToGoalInches + 8, 2) + 8;
+      SHOOTER_VOLTS = 0.000085 * Math.pow(distanceToGoalInches + 10, 2) + 10;
       if (SHOOTER_VOLTS < 7) SHOOTER_VOLTS = 7;
       if (SHOOTER_VOLTS > 13) SHOOTER_VOLTS = 13;
       
@@ -70,13 +72,23 @@ public class LimelightCommand extends CommandBase {
       if (!(joystick.btn_2.get() || SHOULD_USE_LIMELIGHT)) return;
         
       double speed = 0.05 * Math.sqrt(Math.abs(horizontalOffset));
+      speed /= 1.5;
       if (horizontalOffset < -0.2) {
         driveTrain.drive(speed, -speed);
-      } else if (horizontalOffset > 0.1) {
+      } else if (horizontalOffset > 0) {
         driveTrain.drive(-speed, speed);
       }
     } else {
       // System.out.println("No target");
+      if (SHOULD_USE_LIMELIGHT && IN_AUTONOMOUS) {
+        new Thread(() -> {
+          try {
+            driveTrain.drive(-1.5, 1.5);
+            Thread.sleep(1000);
+            driveTrain.drive(0, 0);
+          } catch (InterruptedException e) { }
+        }).start();
+      }
     }
     
     end(false);

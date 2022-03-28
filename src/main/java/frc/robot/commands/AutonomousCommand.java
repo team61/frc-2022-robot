@@ -65,14 +65,16 @@ public class AutonomousCommand extends CommandBase {
 
   private void runScriptedAutonomous() {
     new IntakeCommand(intake, IN).andThen(
-    new DriveTimeCommand(drivetrain, -6.0, -6.0, 1.0)).andThen(
-    new DriveTimeCommand(drivetrain, -8.0, 8.0, 0.65)).andThen(
+    new DriveTimeCommand(drivetrain, -4.0, -4.0, 1.3)).andThen(
+    new DriveTimeCommand(drivetrain, 0.0, 0.0, 0.5)).andThen(
+    new DriveTimeCommand(drivetrain, -2.0, 2.0, 1.2)).andThen(
     new DriveCommand(drivetrain, 0.0, 0.0)).andThen(
     new WaitCommand(0.5)).andThen(
     () -> SHOULD_USE_LIMELIGHT = true).andThen(
-    new WaitCommand(1)).andThen(
+    new WaitCommand(2.0)).andThen(
     () -> SHOULD_USE_LIMELIGHT = false).andThen(
-    new ShootTimeCommand(shooter, OUT, 5.0)).andThen(
+    new DriveTimeCommand(drivetrain, 0.0, 0.0, 0.5)).andThen(
+    new ShootTimeCommand(shooter, OUT, 7.0)).andThen(
     new ShootCommand(shooter, STOP))
     .schedule();
   }

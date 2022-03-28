@@ -53,7 +53,7 @@ public class RobotContainer {
   public final PneumaticHub m_pneumaticHub = new PneumaticHub(15);
   // private final CompressorSubsystem m_compressorSubsystem = new CompressorSubsystem();
   public final PistonSubsystem piston1 = new PistonSubsystem(m_pneumaticHub, 0, 1, 2, 3, 4, 5);
-  public final PistonSubsystem piston2 = new PistonSubsystem(m_pneumaticHub, 15, 14, 12, 13, 10, 11);
+  public final PistonSubsystem piston2 = new PistonSubsystem(m_pneumaticHub, 15, 14, 12, 13, 10, 7);
   public final DoubleSolenoid pistonAdjuster = m_pneumaticHub.makeDoubleSolenoid(8, 9);
 
   private final DoubleMotors driveLeft = new DoubleMotors(18, 19, true);
@@ -134,6 +134,8 @@ public class RobotContainer {
     joystick4.btn_6.whenPressed(new PistonCommand(piston1, DOWN));
     joystick4.btn_11.whenPressed(() -> { System.out.println(RECORDING_OUTPUT); });
     joystick4.btn_12.whenPressed(() -> { System.out.println(PNEUMATICS_RECORDING); });
+
+    joystick4.btn_7.whenPressed(() -> { LIMELIGHT_OVERRIDE = true; });
   }
   
   public Command getLimelightCommand() {
