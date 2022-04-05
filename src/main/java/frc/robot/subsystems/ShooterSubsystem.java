@@ -47,7 +47,7 @@ public class ShooterSubsystem extends SubsystemBase {
     
     new Thread(() -> {
       try {
-          Thread.sleep(1000);
+          Thread.sleep(200);
           intakeSubsystem.intake(true);
       } catch (Exception e) { System.err.println(e); }
     }).start();

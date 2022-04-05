@@ -31,5 +31,5 @@ public final class Constants {
     // public static final double SHOOTER_VOLTS = 11.5;
 
     public static final int LEDStripPort = 0;
-    public static final int LEDStripLength = 213;
+    public static final int LEDStripLength = 230;
 }

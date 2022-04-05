@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDStripSubsystem extends SubsystemBase {
@@ -17,18 +18,36 @@ public class LEDStripSubsystem extends SubsystemBase {
     buffer = new AddressableLEDBuffer(length);
 
     strip.setLength(buffer.getLength());
-    strip.setData(buffer);
     strip.start();
+  }
+
+  public void setHSV(int index, int h, int s, int v) {
+    buffer.setHSV(index, h, s, v);
+  }
+
+  public void setStripHSV(int h, int s, int v) {
+    for (int i = 0; i < buffer.getLength(); i++) {
+      setHSV(i, h, s, v);
+    }
   }
 
   public void setRGB(int index, int r, int g, int b) {
     buffer.setRGB(index, r, g, b);
-    strip.setData(buffer);
   }
 
   public void setStripRGB(int r, int g, int b) {
     for (int i = 0; i < buffer.getLength(); i++) {
       setRGB(i, r, g, b);
+    }
+  }
+
+  public void setColor(int index, Color c) {
+    buffer.setLED(index, c);
+  }
+
+  public void setStripColor(Color c) {
+    for (int i = 0; i < buffer.getLength(); i++) {
+      setColor(i, c);
     }
   }
 
@@ -38,7 +57,7 @@ public class LEDStripSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    strip.setData(buffer);
   }
 
   @Override

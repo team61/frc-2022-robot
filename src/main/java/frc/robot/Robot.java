@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Playback;
@@ -33,18 +34,16 @@ public class Robot extends TimedRobot {
   private ArrayList<double[]> speeds = new ArrayList<>();
   private boolean recording = false;
   private long teleopStartTime = 0;
+  private long runTime = 0;
   int[][] colors = {
     new int[] {255, 0, 0},
-    new int[] {255, 64, 0},
+    new int[] {255, 128, 0},
     new int[] {255, 255, 0},
     new int[] {0, 255, 0},
     new int[] {0, 0, 255},
     new int[] {255, 0, 255}
   };
-  int[][] bvt = {
-    new int[] {255, 0, 255},
-    new int[] {255, 128, 0}
-  };
+  int colorIndex = 0;
 
   public Robot() {
     super(0.02);
@@ -62,15 +61,6 @@ public class Robot extends TimedRobot {
     m_limelightCommand = m_robotContainer.getLimelightCommand();
     m_robotContainer.piston1.stop();
     m_robotContainer.piston2.stop();
-
-    addPeriodic(() -> {
-      if (!IN_AUTONOMOUS) return;
-
-      for (int i = 0; i < LEDStripLength; i++) {
-        int index = i % colors.length;
-        m_robotContainer.ledStrip.setRGB(i, colors[index][0], colors[index][1], colors[index][2]);
-      }
-    }, 0.2);
   }
 
   /**
@@ -87,6 +77,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    runTime++;
 
     // if (m_limelightCommand != null) {
     //   m_limelightCommand.schedule();
@@ -137,12 +129,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    int total = 2;
-    for (int i = 0; i < total; i++) {
-      int index = i % 2;
-      m_robotContainer.ledStrip.setRGB(i, bvt[index][0], bvt[index][1], bvt[index][2]);
-      m_robotContainer.ledStrip.setRGB(i + 2, bvt[index][0], bvt[index][1], bvt[index][2]);
-      m_robotContainer.ledStrip.setRGB(i + 4, bvt[index][0], bvt[index][1], bvt[index][2]);
+    final int period = 3;
+    final int pieceSize = 10;
+
+    if (runTime % period == 0) return;
+    for (int i = 0; i < LEDStripLength; i++) {
+      int index = (int)((i + runTime / period) % LEDStripLength);
+      if (Math.floor(i / pieceSize) % 2 == 0) {
+        m_robotContainer.ledStrip.setRGB(index, 255, 0, 128);
+      } else {
+        m_robotContainer.ledStrip.setRGB(index, 255, 128, 0);
+      }
     }
   }
 
@@ -150,6 +147,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     IN_AUTONOMOUS = true;
+
+    m_robotContainer.driveTrain.driveLeft.disableBrakes();
+    m_robotContainer.driveTrain.driveRight.disableBrakes();
+
     for (int i = 0; i < LEDStripLength; i++) {
       m_robotContainer.ledStrip.setRGB(i, 0, 0, 0);
     }
@@ -163,6 +164,32 @@ public class Robot extends TimedRobot {
     if (m_limelightCommand != null) {
       m_limelightCommand.schedule();
     }
+
+    // final int duration = 100;
+    // final double a1 = (double)(runTime % duration) / duration;
+    // final double a2 = 1 - a1;
+
+    // if (runTime % duration == 0) colorIndex++;
+
+    // int index1 = colorIndex % colors.length;
+    // int index2 = (colorIndex + 1) % colors.length;
+    // Color c1 = new Color(colors[index1][0], colors[index1][1], colors[index1][2]);
+    // Color c2 = new Color(colors[index2][0], colors[index2][1], colors[index2][2]);
+
+    // double A = 1 - (1 - a1) * (1 - a2);
+    // double R = c1.red * a1 / A + c2.red * a2 * (1 - a1) / A;
+    // double G = c1.green * a1 / A + c2.green * a2 * (1 - a1) / A;
+    // double B = c1.blue * a1 / A + c2.blue * a2 * (1 - a1) / A;
+    // Color res = new Color(R, G, B);
+
+    // for (int i = 0; i < LEDStripLength; i++) {
+    //   m_robotContainer.ledStrip.setStripColor(res);
+    // }
+
+    for (int i = 0; i < LEDStripLength; i++) {
+      int hue = (int)((runTime + i) * 180 / (LEDStripLength / 2)) % 180;
+      m_robotContainer.ledStrip.setHSV(i, hue, 255, 128);
+    }
   }
 
   @Override
@@ -174,6 +201,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    m_robotContainer.driveTrain.driveLeft.enableBrakes();
+    m_robotContainer.driveTrain.driveRight.enableBrakes();
 
     m_robotContainer.driveTrain.stop();
     m_robotContainer.intake.stop();

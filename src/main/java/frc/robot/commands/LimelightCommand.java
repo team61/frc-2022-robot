@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 import lib.components.LogitechJoystick;
@@ -60,8 +59,8 @@ public class LimelightCommand extends CommandBase {
       double angleToGoalDegrees = limelightMountAngleDegrees + verticalOffset;
       double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
       double distanceToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-      SHOOTER_VOLTS = 0.000085 * Math.pow(distanceToGoalInches + 10, 2) + 10;
-      if (SHOOTER_VOLTS < 7) SHOOTER_VOLTS = 7;
+      SHOOTER_VOLTS = 0.000096 * Math.pow(distanceToGoalInches + 5, 2) + 7;
+      if (SHOOTER_VOLTS < 5) SHOOTER_VOLTS = 5;
       if (SHOOTER_VOLTS > 13) SHOOTER_VOLTS = 13;
       
       // String x = String.format("%.4f", horizontalOffset);
@@ -69,13 +68,13 @@ public class LimelightCommand extends CommandBase {
       // String area = String.format("%.4f", areaPercentage);
       // System.out.println("(" + x + ", " + y + "), " + area + "%           " + distanceToGoalInches + "in");
 
-      if (!(joystick.btn_2.get() || SHOULD_USE_LIMELIGHT)) return;
+      if (!(joystick.btn_2.get() || joystick.btn_11.get() || joystick.btn_12.get() || SHOULD_USE_LIMELIGHT)) return;
         
-      double speed = 0.05 * Math.sqrt(Math.abs(horizontalOffset));
-      speed /= 1.5;
-      if (horizontalOffset < -0.2) {
+      double speed = 0.04 * Math.sqrt(Math.abs(horizontalOffset));
+      speed = speed < 0.10 ? 0.10 : speed;
+      if (horizontalOffset < 1.5) {
         driveTrain.drive(speed, -speed);
-      } else if (horizontalOffset > 0) {
+      } else if (horizontalOffset > 3.0) {
         driveTrain.drive(-speed, speed);
       }
     } else {
@@ -83,9 +82,9 @@ public class LimelightCommand extends CommandBase {
       if (SHOULD_USE_LIMELIGHT && IN_AUTONOMOUS) {
         new Thread(() -> {
           try {
-            driveTrain.drive(-1.5, 1.5);
+            driveTrain.driveVolts(-2.0, 2.0);
             Thread.sleep(1000);
-            driveTrain.drive(0, 0);
+            driveTrain.driveVolts(0, 0);
           } catch (InterruptedException e) { }
         }).start();
       }
@@ -106,10 +105,3 @@ public class LimelightCommand extends CommandBase {
     return finished;
   }
 }
-
-/**
- * 
- * 18in = 1% area
- * 56in = 0.1% area
- * 
- */
