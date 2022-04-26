@@ -11,7 +11,7 @@ import static frc.robot.Globals.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class IntakeSubsystem extends SubsystemBase {
-  private DoubleMotors intake;
+  public DoubleMotors intake;
   private SensorSubsystem sensor1;
   private SensorSubsystem sensor2;
 
@@ -28,6 +28,11 @@ public class IntakeSubsystem extends SubsystemBase {
   public void stop() {
     IS_EJECTING = false;
     intake.setSpeed(0.0);
+  }
+
+  public void auto() {
+    if (sensor2.isTriggered()) return;
+    intake.motor2.set(ControlMode.PercentOutput, INTAKE_2_SPEED);
   }
 
   public double getVoltage1() {

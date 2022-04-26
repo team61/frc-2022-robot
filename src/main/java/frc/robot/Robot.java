@@ -90,6 +90,8 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     m_robotContainer.ledStrip.turnOff();
     m_robotContainer.driveTrain.stop();
+    m_robotContainer.driveTrain.driveLeft.disableBrakes();
+    m_robotContainer.driveTrain.driveRight.disableBrakes();
     m_robotContainer.intake.stop();
     m_robotContainer.shooter.stop();
 
@@ -148,8 +150,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     IN_AUTONOMOUS = true;
 
-    m_robotContainer.driveTrain.driveLeft.disableBrakes();
-    m_robotContainer.driveTrain.driveRight.disableBrakes();
+    m_robotContainer.driveTrain.driveLeft.enableBrakes();
+    m_robotContainer.driveTrain.driveRight.enableBrakes();
 
     for (int i = 0; i < LEDStripLength; i++) {
       m_robotContainer.ledStrip.setRGB(i, 0, 0, 0);

@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import static frc.robot.Globals.*;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import static frc.robot.Constants.*;
 
 /** An example command that uses an example subsystem. */
@@ -64,8 +67,8 @@ public class AutonomousCommand extends CommandBase {
   }
 
   private void runScriptedAutonomous() {
-    new IntakeCommand(intake, IN).andThen(
-    new DriveTimeCommand(drivetrain, -4.0, -4.0, 0.8)).andThen(
+    new IntakeCommand(intake, "auto").andThen(
+    new DriveTimeCommand(drivetrain, -4.0, -4.0, 1.2)).andThen(
     new DriveTimeCommand(drivetrain, 0.0, 0.0, 0.5)).andThen(
     new DriveTimeCommand(drivetrain, -2.5, 2.5, 1.8)).andThen(
     new DriveCommand(drivetrain, 0.0, 0.0)).andThen(
@@ -73,6 +76,7 @@ public class AutonomousCommand extends CommandBase {
     () -> SHOULD_USE_LIMELIGHT = true).andThen(
     new WaitCommand(2.0)).andThen(
     () -> SHOULD_USE_LIMELIGHT = false).andThen(
+    new DriveTimeCommand(drivetrain, -2.0, -2.0, 1.0)).andThen(
     new DriveTimeCommand(drivetrain, 0.0, 0.0, 0.5)).andThen(
     new ShootTimeCommand(shooter, OUT, 4.0)).andThen(
     new ShootCommand(shooter, STOP))

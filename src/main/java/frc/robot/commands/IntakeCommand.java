@@ -8,6 +8,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static frc.robot.Constants.*;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 /** An example command that uses an example subsystem. */
 public class IntakeCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
@@ -40,6 +42,8 @@ public class IntakeCommand extends CommandBase {
       m_subsystem.eject();
     } else if (direction == STOP) {
       m_subsystem.stop();
+    } else if (direction == "auto") {
+      m_subsystem.auto();
     }
 
     end(false);
